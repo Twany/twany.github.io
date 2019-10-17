@@ -5,6 +5,7 @@ subtitle: "获取勾选项的ID"
 author: "Twany"
 header-img: "img/bg-person/post-bg-rwd.jpg"
 header-mask: 0.4
+catalog: true
 tags:
   - php
   - 前端

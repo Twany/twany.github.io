@@ -1,0 +1,148 @@
+I"*<h2 id="题目描述">题目描述</h2>
+<p>给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。</p>
+
+<p>示例 1:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>输入: "abcabcbb"
+输出: 3 
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>示例 2:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>输入: "bbbbb"
+输出: 1
+解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>示例 3:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>输入: "pwwkew"
+输出: 3
+解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+     请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="思路">思路</h2>
+
+<h4 id="暴力法">暴力法</h4>
+<p>太过残暴，略过不提</p>
+
+<h4 id="滑动窗口">滑动窗口</h4>
+<ol>
+  <li>对于一个字符串，我们创建两个指针 <code class="highlighter-rouge">i</code> 、<code class="highlighter-rouge">j</code> 和set集合来存放不同字符串</li>
+  <li>依次遍历字符串，并检验set集合是否已存在此字符串
+    <ol>
+      <li>不存在：将此字符串添加到集合中，继续向下遍历。并比较此时最长子字符串的长度</li>
+      <li>存在：删除重复元素，i++递加，直至删除重复元素</li>
+    </ol>
+  </li>
+</ol>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+</pre></td><td class="rouge-code"><pre><span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lengthOfLongestSubstring</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>        
+        <span class="kt">int</span> <span class="n">length</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">();</span>    <span class="c1">//字符串长度</span>
+        <span class="kt">int</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>    <span class="c1">//最长子字符长度</span>
+        <span class="c1">//滑动窗口</span>
+        <span class="kt">int</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="o">;</span>
+        
+        <span class="c1">//用来存放不同的子字符串</span>
+        <span class="nc">Set</span><span class="o">&lt;</span><span class="nc">Character</span><span class="o">&gt;</span> <span class="n">set</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashSet</span><span class="o">&lt;&gt;();</span>
+        
+        <span class="k">while</span><span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="n">length</span> <span class="o">&amp;&amp;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">length</span><span class="o">)</span>
+        <span class="o">{</span>
+            <span class="c1">//滑动窗口内 不含有 j元素</span>
+            <span class="k">if</span><span class="o">(!</span><span class="n">set</span><span class="o">.</span><span class="na">contains</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">)))</span>
+            <span class="o">{</span>
+                <span class="c1">//添加新元素j</span>
+                <span class="n">set</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">++));</span>
+                
+                <span class="c1">//更新最长子字符长度（将新的ans和旧的对比）</span>
+                <span class="n">ans</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">((</span><span class="n">j</span><span class="o">-</span><span class="n">i</span><span class="o">),</span><span class="n">ans</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span>  <span class="c1">// 含有 j元素</span>
+                <span class="n">set</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">++));</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><img src="https://i.loli.net/2019/09/01/Cmc1yFxonsaJZEh.png" alt="" /></p>
+
+<h4 id="优化的滑动窗口">优化的滑动窗口</h4>
+<p>为什么排名还是这么靠后呢？一定还有可以大改进的地方。</p>
+
+<p>对上述方法进行时间复杂度分析，可以得出最坏结果为 <code class="highlighter-rouge">o(2n)</code></p>
+
+<p>事实上，它可以被进一步优化为仅需要 n 个步骤。我们可以定义字符到索引的映射，而不是使用集合来判断一个字符是否存在。 当我们找到重复的字符时，我们可以立即跳过该窗口。</p>
+
+<p>也就是说，如果 <code class="highlighter-rouge">s[j]</code>在 <code class="highlighter-rouge">[i, j)[i,j)</code> 范围内有与 <code class="highlighter-rouge">j'</code> 重复的字符，我们不需要逐渐增加 <code class="highlighter-rouge">i</code>。 我们可以直接跳过 [i，j’] 范围内的所有元素，并将 <code class="highlighter-rouge">i</code> 变为 <code class="highlighter-rouge">j' + 1</code></p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Solution</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">lengthOfLongestSubstring</span><span class="o">(</span><span class="nc">String</span> <span class="n">s</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">n</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="na">length</span><span class="o">(),</span> <span class="n">ans</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="nc">Map</span><span class="o">&lt;</span><span class="nc">Character</span><span class="o">,</span> <span class="nc">Integer</span><span class="o">&gt;</span> <span class="n">map</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">HashMap</span><span class="o">&lt;&gt;();</span> <span class="c1">// current index of character</span>
+        <span class="c1">// try to extend the range [i, j]</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">,</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">n</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">)))</span> <span class="o">{</span>
+                <span class="n">i</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">map</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">)),</span> <span class="n">i</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="n">ans</span> <span class="o">=</span> <span class="nc">Math</span><span class="o">.</span><span class="na">max</span><span class="o">(</span><span class="n">ans</span><span class="o">,</span> <span class="n">j</span> <span class="o">-</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+            <span class="n">map</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">s</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">j</span><span class="o">),</span> <span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">ans</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><img src="https://i.loli.net/2019/09/01/YXy5ZxtW97GH4Ia.png" alt="" /></p>
+:ET

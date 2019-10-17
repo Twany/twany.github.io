@@ -1,7 +1,7 @@
 {
-  "name": "Hux Blog",
-  "short_name": "Hux Blog",
-  "description": "About an engineer & designer who loves web.",
+  "name": "Twany Blog",
+  "short_name": "Twany Blog",
+  "description": "Do the thing what I think that is right.",
   "icons": [{
     "src": "icons/128.png",
     "sizes": "128x128",

@@ -5,6 +5,7 @@ subtitle: "a标签和button标签的区别（地址跳转）"
 author: "Twany"
 header-img: "img/bg-scene/psot-bg-two.jpg"
 header-mask: 0.4
+catalog: true
 tags:
   - 前端
 ---

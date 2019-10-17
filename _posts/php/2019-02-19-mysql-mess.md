@@ -5,6 +5,7 @@ subtitle: "Adminer登录乱码，phpMyAdmin报错#2002，Navicat报错代码1003
 author: "Twany"
 header-img: "img/bg-scene/psot-bg-nine.jpg"
 header-mask: 0.4
+catalog: true
 tags:
   - Mysql
 ---

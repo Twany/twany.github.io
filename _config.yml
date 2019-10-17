@@ -78,7 +78,7 @@ ga_domain: huangxuan.me
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "To be better<br>时间对每个人都是平等的"
+sidebar-about-description: "To be better<br>做自己认为正确的事情"
 sidebar-avatar: /img/avatar-yyk.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 

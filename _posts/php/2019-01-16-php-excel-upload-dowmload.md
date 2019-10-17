@@ -5,6 +5,7 @@ subtitle: "tp5.1使用phpexcel——上传与下载"
 author: "Twany"
 header-img: "img/bg-scene/psot-bg-ten.jpg"
 header-mask: 0.4
+catalog: true
 tags:
   - php
   - phpExcel

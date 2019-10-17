@@ -1,0 +1,128 @@
+I"�
+<blockquote>
+  <p>成神之路</p>
+</blockquote>
+
+<h2 id="前言">前言</h2>
+
+<p>基础不牢，地动山摇，谨以此句提醒自己。</p>
+
+<h2 id="备注">备注</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>状态</th>
+      <th>含义</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>not-start</td>
+      <td>当前未开始总结</td>
+    </tr>
+    <tr>
+      <td>doing</td>
+      <td>总结中</td>
+    </tr>
+    <tr>
+      <td>α</td>
+      <td>目前仅供参考未修正和发布</td>
+    </tr>
+    <tr>
+      <td>done</td>
+      <td>总结完毕</td>
+    </tr>
+    <tr>
+      <td>fixing</td>
+      <td>查漏补缺修改中</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="目录">目录</h2>
+
+<h2 id="语言基础">语言基础</h2>
+
+<h4 id="前端学习">前端学习</h4>
+
+<h4 id="php学习">PHP学习</h4>
+
+<h4 id="java学习">Java学习</h4>
+
+<ul>
+  <li>
+    <p>[数据结构(doing)]</p>
+
+    <ul>
+      <li>数组</li>
+      <li>堆/栈</li>
+      <li>树</li>
+      <li>队列</li>
+      <li>链表</li>
+      <li>图</li>
+      <li>散列表</li>
+    </ul>
+  </li>
+  <li>
+    <p>算法(doing)</p>
+  </li>
+  <li>
+    <p>计算机基础(doing)</p>
+
+    <ul>
+      <li><a href="/2018/11/29/Linux-common-command">linux常用命令</a></li>
+      <li>shell</li>
+    </ul>
+  </li>
+  <li>
+    <p>高并发相关(not-start)</p>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="php基础学习">PHP基础学习</h2>
+<p><a href="http://php.net/manual/zh/">php.net</a></p>
+
+<p><a href="https://www.imooc.com/course/list?c=php">慕课网</a></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>composer install
+php -S localhost:8000
+# 浏览器
+http://localhost:8000/php/index.php
+# 命令行
+php index.php
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h3 id="符合psr的php编程规范">符合PSR的PHP编程规范</h3>
+<p><a href="https://psr.phphub.org/">PHP 标准规范</a></p>
+
+<h4 id="实例"><a href="/2018/11/27/PHP-technical-examples">实例</a></h4>
+
+<h4 id="文档"><a href="/2018/11/27/PHP-coding-specifications-and-recommendations">文档</a></h4>
+
+<h4 id="经验"><a href="/2018/11/27/PHP-experience">经验</a></h4>
+
+<h2 id="mysql">Mysql</h2>
+
+<h3 id="常用sql语句"><a href="/2018/11/29/Common-sql-statement">常用sql语句</a></h3>
+
+<h3 id="引擎"><a href="/2018/11/29/Mysql-engine">引擎</a></h3>
+
+<h3 id="事务"><a href="/2018/11/29/Mysql-engine#事务">事务</a></h3>
+
+<h3 id="索引"><a href="/2018/11/29/Mysql-engine#索引">索引</a></h3>
+
+<h3 id="锁"><a href="/2018/11/29/Mysql-engine#锁">锁</a></h3>
+
+<h2 id="redis"><a href="/tags/#redis">Redis</a></h2>
+
+<h3 id="常见用途">常见用途</h3>
+
+:ET

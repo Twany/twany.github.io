@@ -5,6 +5,7 @@ subtitle: "关于layUI获取表格中复选框对应数据的方法"
 author: "Twany"
 header-img: "img/bg-scene/home-bg-o.jpg"
 header-mask: 0.4
+catalog: true
 tags:
   - 前端
   - layUI
