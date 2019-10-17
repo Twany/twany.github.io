@@ -1,0 +1,353 @@
+I"V[<h5 id="基数排序-vs-计数排序-vs-桶排序">基数排序 vs 计数排序 vs 桶排序</h5>
+<p>我们之前已经学过了了<strong>计数排序</strong>，本篇要讲的是<strong>基数排序</strong>和<strong>桶排序</strong>，三者其实都有用到了<strong>通</strong>的概念，但对其使用有些差异：</p>
+<ul>
+  <li>计数排序：每个桶存放单一相同键值</li>
+  <li>基数排序：根据键值的每位数字来分配桶</li>
+  <li>桶排序：  每个桶存放一定范围的数值</li>
+</ul>
+
+<h2 id="基数排序">基数排序</h2>
+<blockquote>
+  <p>基数排序是一种非比较型整数排序算法，其原理是将整数按位数切割成不同的数字，然后按每个位数分别比较。由于整数也可以表达字符串（比如名字或日期）和特定格式的浮点数，所以基数排序也不仅仅只能用于整数。</p>
+  <h4 id="lsd-基数排序动图演示">LSD 基数排序动图演示</h4>
+  <p><img src="https://www.runoob.com/wp-content/uploads/2019/03/radixSort.gif" alt="" /></p>
+</blockquote>
+
+<h4 id="思路">思路</h4>
+<p>由上图我们可以总结出对应步骤：</p>
+<ul>
+  <li>先创建一个二维数组<code class="highlighter-rouge">arr[i][n]</code>，用来存放每次排序的元素</li>
+  <li>对元素由后往前进行遍历，遍历位数对应相应索引，存入二维数组</li>
+  <li>再次从二维数组中取出，更新原数组</li>
+  <li>对原数组进行下次遍历，遍历位数向前移动一位（遍历次数为最大值得位数）</li>
+</ul>
+
+<h4 id="代码">代码</h4>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">RadixSort</span> <span class="kd">implements</span> <span class="nc">IArraySort</span> <span class="o">{</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">sort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">sourceArray</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="c1">// 对 arr 进行拷贝，不改变参数内容</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">sourceArray</span><span class="o">,</span> <span class="n">sourceArray</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+
+        <span class="kt">int</span> <span class="n">maxDigit</span> <span class="o">=</span> <span class="n">getMaxDigit</span><span class="o">(</span><span class="n">arr</span><span class="o">);</span>
+        <span class="k">return</span> <span class="nf">radixSort</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">maxDigit</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 获取最高位数
+     */</span>
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getMaxDigit</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">maxValue</span> <span class="o">=</span> <span class="n">getMaxValue</span><span class="o">(</span><span class="n">arr</span><span class="o">);</span>
+        <span class="k">return</span> <span class="nf">getNumLenght</span><span class="o">(</span><span class="n">maxValue</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">int</span> <span class="nf">getMaxValue</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">maxValue</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">value</span> <span class="o">:</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">maxValue</span> <span class="o">&lt;</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">maxValue</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">maxValue</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="kt">int</span> <span class="nf">getNumLenght</span><span class="o">(</span><span class="kt">long</span> <span class="n">num</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">num</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="kt">int</span> <span class="n">lenght</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">long</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span> <span class="n">temp</span> <span class="o">!=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">temp</span> <span class="o">/=</span> <span class="mi">10</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">lenght</span><span class="o">++;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">lenght</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">radixSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">maxDigit</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">mod</span> <span class="o">=</span> <span class="mi">10</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">dev</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span>
+
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">maxDigit</span><span class="o">;</span> <span class="n">i</span><span class="o">++,</span> <span class="n">dev</span> <span class="o">*=</span> <span class="mi">10</span><span class="o">,</span> <span class="n">mod</span> <span class="o">*=</span> <span class="mi">10</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// 考虑负数的情况，这里扩展一倍队列数，其中 [0-9]对应负数，[10-19]对应正数 (bucket + 10)</span>
+            <span class="kt">int</span><span class="o">[][]</span> <span class="n">counter</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">mod</span> <span class="o">*</span> <span class="mi">2</span><span class="o">][</span><span class="mi">0</span><span class="o">];</span>
+
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">j</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">j</span><span class="o">++)</span> <span class="o">{</span>
+                <span class="kt">int</span> <span class="n">bucket</span> <span class="o">=</span> <span class="o">((</span><span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">%</span> <span class="n">mod</span><span class="o">)</span> <span class="o">/</span> <span class="n">dev</span><span class="o">)</span> <span class="o">+</span> <span class="n">mod</span><span class="o">;</span>
+                <span class="n">counter</span><span class="o">[</span><span class="n">bucket</span><span class="o">]</span> <span class="o">=</span> <span class="n">arrayAppend</span><span class="o">(</span><span class="n">counter</span><span class="o">[</span><span class="n">bucket</span><span class="o">],</span> <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">]);</span>
+            <span class="o">}</span>
+
+            <span class="kt">int</span> <span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">bucket</span> <span class="o">:</span> <span class="n">counter</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">value</span> <span class="o">:</span> <span class="n">bucket</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">arr</span><span class="o">[</span><span class="n">pos</span><span class="o">++]</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">arr</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 自动扩容，并保存数据
+     *
+     * @param arr
+     * @param value
+     */</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">arrayAppend</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">arr</span><span class="o">[</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">arr</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><strong>参考文章：</strong><a href="https://www.runoob.com/w3cnote/radix-sort.html">菜鸟教程</a></p>
+<h4 id="笔记">笔记</h4>
+<p><img src="https://i.loli.net/2019/07/31/5d406b317414e15007.jpg" alt="" /></p>
+
+<h2 id="桶排序">桶排序</h2>
+<h4 id="思路-1">思路</h4>
+<ul>
+  <li>创建桶，每个桶存放一定范围的数值（在额外空间充足的情况下，尽量增大桶的数量）</li>
+  <li>遍历数组，将元素放入对应桶中</li>
+  <li>对每个桶内的元素进行排序（选择何种排序对性能影响至关重要）</li>
+  <li>依次取出，排序完成</li>
+</ul>
+
+<h5 id="注意桶是一个数组所有的桶又构成了一个二维数组">注意：桶是一个数组，所有的桶又构成了一个二维数组</h5>
+
+<h4 id="代码逻辑c版">代码逻辑（C++版）</h4>
+<pre><code class="language-C++">Vector&lt;double&gt; A = [0.78, 0.17, 0.26, 0.94, 0.23];  //A 为原数组
+Vector&lt;Vector&lt;double&gt;&gt; B  //B为桶集合，长度为10（0~9）
+
+//循环遍历A，将元素存入对应桶
+for(const &amp;x : A)
+{
+    B[(10*x)int].push(x);
+}
+
+//对每个桶进行排序
+for(int i=0; i&lt;B.size(); i++)
+{
+    B[i].sort();
+}
+
+//将桶集合内元素依次取出重新复制更新 A
+for(int i=0,j=0; i&lt;B.size(); i++)
+{
+    //依次取出每个桶内元素
+    for(const &amp;x : B[i])
+        A[j++] = x;
+}
+</code></pre>
+
+<h4 id="完整代码java">完整代码（Java）</h4>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BucketSort</span> <span class="kd">implements</span> <span class="nc">IArraySort</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="nc">InsertSort</span> <span class="n">insertSort</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">InsertSort</span><span class="o">();</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">sort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">sourceArray</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="c1">// 对 arr 进行拷贝，不改变参数内容</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">sourceArray</span><span class="o">,</span> <span class="n">sourceArray</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+
+        <span class="k">return</span> <span class="nf">bucketSort</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="mi">5</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">bucketSort</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">bucketSize</span><span class="o">)</span> <span class="kd">throws</span> <span class="nc">Exception</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">arr</span><span class="o">;</span>
+        <span class="o">}</span>
+
+        <span class="kt">int</span> <span class="n">minValue</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="kt">int</span> <span class="n">maxValue</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">value</span> <span class="o">:</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">&lt;</span> <span class="n">minValue</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">minValue</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+            <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">&gt;</span> <span class="n">maxValue</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">maxValue</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="kt">int</span> <span class="n">bucketCount</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="nc">Math</span><span class="o">.</span><span class="na">floor</span><span class="o">((</span><span class="n">maxValue</span> <span class="o">-</span> <span class="n">minValue</span><span class="o">)</span> <span class="o">/</span> <span class="n">bucketSize</span><span class="o">)</span> <span class="o">+</span> <span class="mi">1</span><span class="o">;</span>
+        <span class="kt">int</span><span class="o">[][]</span> <span class="n">buckets</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">bucketCount</span><span class="o">][</span><span class="mi">0</span><span class="o">];</span>
+
+        <span class="c1">// 利用映射函数将数据分配到各个桶中</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="nc">Math</span><span class="o">.</span><span class="na">floor</span><span class="o">((</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">-</span> <span class="n">minValue</span><span class="o">)</span> <span class="o">/</span> <span class="n">bucketSize</span><span class="o">);</span>
+            <span class="n">buckets</span><span class="o">[</span><span class="n">index</span><span class="o">]</span> <span class="o">=</span> <span class="n">arrAppend</span><span class="o">(</span><span class="n">buckets</span><span class="o">[</span><span class="n">index</span><span class="o">],</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]);</span>
+        <span class="o">}</span>
+
+        <span class="kt">int</span> <span class="n">arrIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">bucket</span> <span class="o">:</span> <span class="n">buckets</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">bucket</span><span class="o">.</span><span class="na">length</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">continue</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="c1">// 对每个桶进行排序，这里使用了插入排序</span>
+            <span class="n">bucket</span> <span class="o">=</span> <span class="n">insertSort</span><span class="o">.</span><span class="na">sort</span><span class="o">(</span><span class="n">bucket</span><span class="o">);</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">value</span> <span class="o">:</span> <span class="n">bucket</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">arrIndex</span><span class="o">++]</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="k">return</span> <span class="n">arr</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+     * 自动扩容，并保存数据
+     *
+     * @param arr
+     * @param value
+     */</span>
+    <span class="kd">private</span> <span class="kt">int</span><span class="o">[]</span> <span class="nf">arrAppend</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">arr</span> <span class="o">=</span> <span class="nc">Arrays</span><span class="o">.</span><span class="na">copyOf</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
+        <span class="n">arr</span><span class="o">[</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">value</span><span class="o">;</span>
+        <span class="k">return</span> <span class="n">arr</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><strong>参考文章：</strong><a href="https://www.runoob.com/w3cnote/bucket-sort.html">菜鸟教程</a></p>
+<h4 id="笔记-1">笔记</h4>
+<p><img src="https://i.loli.net/2019/07/31/5d406b67a8aa337804.jpg" alt="" /></p>
+:ET

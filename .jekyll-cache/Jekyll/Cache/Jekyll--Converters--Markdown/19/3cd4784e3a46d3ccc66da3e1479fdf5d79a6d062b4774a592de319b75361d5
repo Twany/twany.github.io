@@ -1,0 +1,96 @@
+I"�<blockquote>
+  <p>很简单的算法，直接上代码</p>
+</blockquote>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Test</span>
+<span class="o">{</span>
+    <span class="c1">//原数组</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="o">{</span><span class="mi">10</span><span class="o">,</span><span class="mi">11</span><span class="o">,</span><span class="mi">12</span><span class="o">,</span><span class="mi">16</span><span class="o">,</span><span class="mi">18</span><span class="o">,</span><span class="mi">23</span><span class="o">,</span><span class="mi">29</span><span class="o">};</span>
+    <span class="c1">//要查找的key</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">key</span> <span class="o">=</span> <span class="mi">17</span><span class="o">;</span>
+    <span class="c1">//返回查找的索引</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="n">index</span><span class="o">;</span>
+    <span class="c1">//二分查找</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="o">{</span><span class="mi">10</span><span class="o">,</span><span class="mi">11</span><span class="o">,</span><span class="mi">12</span><span class="o">,</span><span class="mi">16</span><span class="o">,</span><span class="mi">18</span><span class="o">,</span><span class="mi">23</span><span class="o">,</span><span class="mi">29</span><span class="o">};</span>
+        <span class="n">search</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">index</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">search</span><span class="o">(</span><span class="kt">int</span> <span class="n">left</span><span class="o">,</span> <span class="kt">int</span> <span class="n">right</span><span class="o">){</span>
+        <span class="c1">//int mid = (left + right)/2;</span>
+        <span class="kt">int</span> <span class="n">mid</span> <span class="o">=</span> <span class="n">left</span> <span class="o">+</span> <span class="o">(</span><span class="n">right</span><span class="o">-</span><span class="n">left</span><span class="o">)/</span><span class="mi">2</span><span class="o">;</span><span class="c1">//防止栈溢出</span>
+
+        <span class="c1">//注意此处判断，如果不加这个判断。</span>
+        <span class="c1">//当要查找的数不存在与这个数组，那么就会陷入死循环</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">left</span> <span class="o">&lt;</span> <span class="n">right</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">key</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">[</span><span class="n">mid</span><span class="o">]){</span>
+                <span class="n">search</span><span class="o">(</span><span class="n">left</span><span class="o">,</span><span class="n">mid</span><span class="o">-</span><span class="mi">1</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">mid</span><span class="o">]</span> <span class="o">&lt;</span><span class="n">key</span><span class="o">){</span>
+                <span class="n">search</span><span class="o">(</span><span class="n">mid</span><span class="o">+</span><span class="mi">1</span><span class="o">,</span><span class="n">right</span><span class="o">);</span>
+            <span class="o">}</span><span class="k">else</span> <span class="o">{</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">mid</span><span class="o">;</span>
+            <span class="o">}</span>
+        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+            <span class="c1">//此处还可以优化，比较key与 arr[left]和arr[right]的差距</span>
+            <span class="c1">//选取最小的作为index</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">left</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h5 id="此算法有三个需要注意的地方">此算法有三个需要注意的地方</h5>
+<ul>
+  <li>下一次迭代的边界
+    <ul>
+      <li>每当我们用key与mid对比时，若key不正确，下次边界变为 <code class="highlighter-rouge">mid+1</code> 或 <code class="highlighter-rouge">mid-1</code></li>
+    </ul>
+  </li>
+  <li>避免死循环
+    <ul>
+      <li>如果数组内没有我们要查找的数怎么办？不加处理的话，程序就会进入死循环，在这里我对left和right进行了一个判断，防止死循环</li>
+    </ul>
+  </li>
+  <li>mid 防止栈溢出</li>
+</ul>
+
+<h4 id="笔记">笔记</h4>
+<p><img src="https://i.loli.net/2019/07/18/5d2ff3ad480d774365.jpg" alt="" /></p>
+:ET

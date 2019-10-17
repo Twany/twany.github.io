@@ -1,0 +1,155 @@
+I".<p>其实，很久之前就听说Swoole的大名了。自己也曾试着去学习了一下，但当时的自己是真的菜，一听说是要在linux上才能玩得转，也就退却了。</p>
+
+<p>直到环院的项目开始动工，自己也就“被迫”开始学习了</p>
+
+<p>最开始想的是很简单，觉得无非就是一个简单的接受发数据嘛，可当操作起来，完全懵逼。现在也没有学过计算机网络，也就不知道网络协议的区别，第一次用到Tcp真的以一头雾水，哎。。。</p>
+
+<p>生产环境：</p>
+<ul>
+  <li>硬件：<strong>esp8266</strong></li>
+  <li>软件：
+    <ul>
+      <li>系统环境：CentOS 7</li>
+      <li>运行环境：PHP 7</li>
+      <li>Swoole：swoole 4.4</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="起源">起源</h2>
+<p>最开始自己使用的是<code class="highlighter-rouge">WorkMan</code>，结果连接不成功，现在看来不是<code class="highlighter-rouge">WorkMan</code>使用不当，而是服务器的问题。</p>
+
+<h2 id="解决方法">解决方法</h2>
+<h4 id="step1-swoole安装">step1 swoole安装</h4>
+<p>官网下载swoole，并编译到服务器上。</p>
+
+<p>此处有几个坑</p>
+<ul>
+  <li>swoole不是安装到项目目录，而是server目录</li>
+  <li>注意PHP版本，4.4就已经要求是php7.2版本了</li>
+  <li>宝塔界面有swoole的扩展，应该可以直接安装</li>
+  <li>下载新的PHP版本，要在网站界面去切换PHP版本</li>
+</ul>
+
+<p>具体可参考：<a href="https://blog.csdn.net/z13615480737/article/details/83857055">swoole安装详细步骤</a></p>
+
+<h4 id="step2-代码编写">step2 代码编写</h4>
+<p>网上找了几个demo，因为自己只需要实现数据的接发，所以很简单</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+</pre></td><td class="rouge-code"><pre><span class="cp">&lt;?php</span><span class="err"> </span>
+
+<span class="c1">// 创建serv 并且全网广播 监听2350端口</span>
+<span class="nv">$serv</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_server</span><span class="p">(</span><span class="s2">"0.0.0.0 "</span><span class="p">,</span> <span class="mi">2350</span><span class="p">);</span>
+
+<span class="c1">// 进入监听事件</span>
+<span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'connect'</span><span class="p">,</span><span class="k">function</span><span class="p">(</span><span class="nv">$serv</span><span class="p">,</span><span class="nv">$fd</span><span class="p">){</span>
+
+<span class="k">echo</span> <span class="s2">"进入监听 :进入用户"</span><span class="o">.</span><span class="nv">$fd</span><span class="o">.</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span>
+
+<span class="p">});</span>
+
+<span class="c1">// 监听数据接受事件</span>
+<span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'receive'</span><span class="p">,</span><span class="k">function</span><span class="p">(</span><span class="nv">$serv</span><span class="p">,</span><span class="nv">$fd</span><span class="p">,</span><span class="nv">$from_id</span><span class="p">,</span><span class="nv">$data</span><span class="p">){</span>
+<span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span><span class="s2">"用户："</span><span class="o">.</span><span class="nv">$fd</span><span class="o">.</span><span class="s2">"---"</span><span class="o">.</span><span class="nv">$data</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="c1">//离开监听</span>
+<span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'close'</span><span class="p">,</span><span class="k">function</span><span class="p">(</span><span class="nv">$serv</span><span class="p">,</span><span class="nv">$fd</span><span class="p">){</span>
+
+<span class="k">echo</span> <span class="s2">"用户离开用户:"</span><span class="o">.</span><span class="nv">$fd</span><span class="o">.</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span>
+
+<span class="p">});</span>
+
+<span class="c1">//启动</span>
+<span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">();</span>
+<span class="cp">?&gt;</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>上面出现的ip注意哟填写成<code class="highlighter-rouge">0.0.0.0</code>，端口号随意，我这里填写的是2350</p>
+
+<h4 id="step3-运行">step3 运行</h4>
+<p>打开Linux命令行，<strong>进入到项目目录</strong>，输入<code class="highlighter-rouge">php data.php</code>，运行服务</p>
+
+<p>结果显示 <strong>connections refuesd</strong>，为什么呢？</p>
+
+<p>忘了安全组配置！！！</p>
+
+<h4 id="step4-安全组配置">step4 安全组配置</h4>
+<p>因为我是阿里云的服务器，所以登录阿里云控制台</p>
+
+<p>添加安全组规则（出入方向都要添加）
+<img src="https://i.loli.net/2019/07/16/5d2ddca04275530790.png" alt="" />
+<img src="https://i.loli.net/2019/07/16/5d2ddcacada9f23101.png" alt="" /></p>
+
+<p>本以为一切都已经over，可是再次测试———仍然报同样的错误！</p>
+
+<p>百度了一大堆，都在说是防火墙的问题，可是自己明明已经设置安全组规则啊！</p>
+
+<h4 id="step5-找bug">step5 找bug</h4>
+<p>找到一篇博客，博主不是通过在控制台设置安全组来设置防火墙，而是直接在Linux设置</p>
+
+<p>自己也就照样敲了一遍命令，结果，不可思议的一幕出现了</p>
+
+<ul>
+  <li>
+    <p><code class="highlighter-rouge">firewall-cmd --list-ports</code> 查看开放端口
+<img src="https://i.loli.net/2019/07/16/5d2dddda7e51420725.png" alt="" />
+我们可以看到，并没有我们之前设置的2235端口，奇怪了</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">firewall-cmd --zone=public --add-port=2235/tcp --permanent</code>  添加2350开放端口</p>
+  </li>
+  <li>
+    <p><code class="highlighter-rouge">systemctl restart firewalld.service</code> 重启服务生效</p>
+  </li>
+</ul>
+
+<p>这样，当我们再次查看端口时，2350成功出现
+<img src="https://i.loli.net/2019/07/16/5d2dde6b1e87795719.png" alt="" /></p>
+
+<h4 id="step6-成功">step6 成功</h4>
+<p>其实这里有个小插曲，完成第五步之后并没有成功，于是重启服务器，再次进入到项目目录，<code class="highlighter-rouge">php date.php</code>运行服务文件</p>
+
+<p>再次访问，成功！
+<img src="https://i.loli.net/2019/07/16/5d2ddf97d2ba897429.png" alt="" />
+<img src="https://i.loli.net/2019/07/16/5d2ddfaba15d343551.jpg" alt="" /></p>
+
+<hr />
+
+<h2 id="总结">总结</h2>
+<p>其实，这一切的问题都是自己基础知识的缺失，完全就是没头的苍蝇乱飞。</p>
+
+<p>另外，设置Linux服务器时，最好自己亲自用命令去设置一下，否则出现上述的bug就真的恶心死了，从下午一点到晚上八点，菜是原罪啊！</p>
+
+<p>不得不说，Swoole是真的牛逼！简直碉堡了有没有</p>
+
+<p>最有效的方法，<strong>重启试试</strong>！</p>
+
+<p><a href="https://www.qinziheng.com/swoole/7472.htm">致谢</a></p>
+
+:ET

@@ -1,0 +1,267 @@
+I"�4<h2 id="什么是springcloud">什么是SpringCloud</h2>
+<p><strong>微服务架构的解决方案，是很多组件的集合</strong></p>
+
+<ul>
+  <li>eureka: 注册中心，服务的注册和实现</li>
+  <li>zuul: 网关组件，路由请求，过滤器（ribbon hystrix）</li>
+  <li>ribbon: 负载均衡组件</li>
+  <li>hystrix: 熔断组件</li>
+  <li>feign: 远程调用组件（ribbon hystrix）
+    <h2 id="spring的resttemplate">Spring的RestTemplate</h2>
+    <blockquote>
+      <p>Spring提供了一个RestTemplate模板工具类，对基于Http的客户端进行了封装，并且实现了对象与json的序列化和反序列化，非常方便。RestTemplate并没有限定Http的客户端类型，而是进行了抽象，目前常用的3种都有支持：</p>
+      <ul>
+        <li>HttpClient</li>
+        <li>OkHttp</li>
+        <li>JDK原生的URLConnection（默认的）</li>
+      </ul>
+    </blockquote>
+  </li>
+</ul>
+
+<h2 id="项目启动">项目启动</h2>
+<h4 id="启动类">启动类</h4>
+<ul>
+  <li>首先在项目中注册一个<code class="highlighter-rouge">RestTemplate</code>对象，可以在启动类位置注册
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre>  <span class="nd">@SpringBootApplication</span>
+  <span class="kd">public</span> <span class="kd">class</span> <span class="nc">DemoApplication</span> <span class="o">{</span>
+
+      <span class="nd">@Bean</span>
+      <span class="kd">public</span> <span class="nc">RestTemplate</span> <span class="nf">restTemplate</span><span class="o">(){</span>
+          <span class="k">return</span> <span class="k">new</span> <span class="nf">RestTemplate</span><span class="o">();</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+          <span class="nc">SpringApplication</span><span class="o">.</span><span class="na">run</span><span class="o">(</span><span class="nc">DemoApplication</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">args</span><span class="o">);</span>
+      <span class="o">}</span>
+
+  <span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>然后是pojo类(必须要有getter,setter和toString方法)
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+</pre></td><td class="rouge-code"><pre>  <span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">itcast</span><span class="o">.</span><span class="na">service</span><span class="o">.</span><span class="na">pojo</span><span class="o">;</span>
+
+  <span class="kd">public</span> <span class="kd">class</span> <span class="nc">User</span><span class="o">{</span>
+
+      <span class="kd">private</span> <span class="nc">Long</span> <span class="n">id</span><span class="o">;</span>
+
+      <span class="kd">private</span> <span class="nc">String</span> <span class="n">username</span><span class="o">;</span>
+
+      <span class="kd">private</span> <span class="nc">String</span> <span class="n">phone</span><span class="o">;</span>
+
+      <span class="kd">private</span> <span class="nc">String</span> <span class="n">password</span><span class="o">;</span>
+
+      <span class="kd">private</span> <span class="nc">String</span> <span class="n">salt</span><span class="o">;</span>
+
+      <span class="nd">@Override</span>
+      <span class="kd">public</span> <span class="nc">String</span> <span class="nf">toString</span><span class="o">()</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="s">"User{"</span> <span class="o">+</span>
+                  <span class="s">"id="</span> <span class="o">+</span> <span class="n">id</span> <span class="o">+</span>
+                  <span class="s">", username='"</span> <span class="o">+</span> <span class="n">username</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                  <span class="s">", phone='"</span> <span class="o">+</span> <span class="n">phone</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                  <span class="s">", password='"</span> <span class="o">+</span> <span class="n">password</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                  <span class="s">", salt='"</span> <span class="o">+</span> <span class="n">salt</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                  <span class="s">", created='"</span> <span class="o">+</span> <span class="n">created</span> <span class="o">+</span> <span class="sc">'\''</span> <span class="o">+</span>
+                  <span class="sc">'}'</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="nc">Long</span> <span class="nf">getId</span><span class="o">()</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="n">id</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setId</span><span class="o">(</span><span class="nc">Long</span> <span class="n">id</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">this</span><span class="o">.</span><span class="na">id</span> <span class="o">=</span> <span class="n">id</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getUsername</span><span class="o">()</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="n">username</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUsername</span><span class="o">(</span><span class="nc">String</span> <span class="n">username</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">this</span><span class="o">.</span><span class="na">username</span> <span class="o">=</span> <span class="n">username</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getPhone</span><span class="o">()</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="n">phone</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setPhone</span><span class="o">(</span><span class="nc">String</span> <span class="n">phone</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">this</span><span class="o">.</span><span class="na">phone</span> <span class="o">=</span> <span class="n">phone</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getPassword</span><span class="o">()</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="n">password</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setPassword</span><span class="o">(</span><span class="nc">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">this</span><span class="o">.</span><span class="na">password</span> <span class="o">=</span> <span class="n">password</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getSalt</span><span class="o">()</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="n">salt</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setSalt</span><span class="o">(</span><span class="nc">String</span> <span class="n">salt</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">this</span><span class="o">.</span><span class="na">salt</span> <span class="o">=</span> <span class="n">salt</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="nc">String</span> <span class="nf">getCreated</span><span class="o">()</span> <span class="o">{</span>
+          <span class="k">return</span> <span class="n">created</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setCreated</span><span class="o">(</span><span class="nc">String</span> <span class="n">created</span><span class="o">)</span> <span class="o">{</span>
+          <span class="k">this</span><span class="o">.</span><span class="na">created</span> <span class="o">=</span> <span class="n">created</span><span class="o">;</span>
+      <span class="o">}</span>
+
+      <span class="kd">private</span> <span class="nc">String</span> <span class="n">created</span><span class="o">;</span>
+
+  <span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>控制器类
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+</pre></td><td class="rouge-code"><pre>  <span class="kn">package</span> <span class="n">com</span><span class="o">.</span><span class="na">itcast</span><span class="o">.</span><span class="na">service</span><span class="o">.</span><span class="na">controller</span><span class="o">;</span>
+
+  <span class="kn">import</span> <span class="nn">com.itcast.service.pojo.User</span><span class="o">;</span>
+  <span class="kn">import</span> <span class="nn">org.springframework.beans.factory.annotation.Autowired</span><span class="o">;</span>
+  <span class="kn">import</span> <span class="nn">org.springframework.stereotype.Controller</span><span class="o">;</span>
+  <span class="kn">import</span> <span class="nn">org.springframework.web.bind.annotation.*</span><span class="o">;</span>
+  <span class="kn">import</span> <span class="nn">org.springframework.web.client.RestTemplate</span><span class="o">;</span>
+
+  <span class="nd">@Controller</span>
+  <span class="nd">@RequestMapping</span><span class="o">(</span><span class="s">"consumer/user"</span><span class="o">)</span>
+  <span class="kd">public</span> <span class="kd">class</span> <span class="nc">UserController</span> <span class="o">{</span>
+
+      <span class="nd">@Autowired</span>
+      <span class="kd">private</span> <span class="nc">RestTemplate</span> <span class="n">restTemplate</span><span class="o">;</span>
+
+      <span class="nd">@GetMapping</span>
+      <span class="nd">@ResponseBody</span>
+      <span class="kd">public</span> <span class="nc">User</span> <span class="nf">queryUserById</span><span class="o">(</span><span class="nd">@RequestParam</span><span class="o">(</span><span class="s">"id"</span><span class="o">)</span><span class="kt">int</span> <span class="n">id</span><span class="o">){</span>
+          <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">restTemplate</span><span class="o">.</span><span class="na">getForObject</span><span class="o">(</span><span class="s">"http://localhost:8081/user/"</span> <span class="o">+</span> <span class="n">id</span><span class="o">,</span> <span class="nc">User</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+      <span class="o">}</span>
+  <span class="o">}</span>
+
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+    <ul>
+      <li><code class="highlighter-rouge">@ResponseBody</code> 负责将返回数据写入 <code class="highlighter-rouge">HTTP response body</code> 中（json格式）</li>
+      <li><code class="highlighter-rouge">@RequestParam</code> 为url 尾的 <code class="highlighter-rouge">?id=xxx</code> 形式</li>
+      <li><code class="highlighter-rouge">@PathVariable</code> 为url 尾的 <code class="highlighter-rouge">/id/2</code> 形式</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="总结">总结</h2>
+<h5 id="springcloud个人感觉是利用不同的容器每一个容器负责一个服务提供对应的地址和端口由其他服务来引用的概念">SpringCloud个人感觉是利用不同的容器，每一个容器负责一个服务。提供对应的地址和端口，由其他服务来引用的概念。</h5>
+:ET

@@ -1,0 +1,78 @@
+I"�<h2 id="raid独立冗余磁盘排列">RAID（独立冗余磁盘排列）</h2>
+<blockquote>
+  <p>RAID技术通过把多个硬盘设备组合成一个容量更大、安全性更好的磁盘阵列，并把数据切割成多个区段后分别存放在各个不同的物理硬盘设备上，然后利用分散读写技术来提升磁盘阵列整体的性能，同时把多个重要数据的副本同步到不同的物理硬盘设备上，从而起到了非常好的数据冗余备份效果。</p>
+</blockquote>
+
+<h4 id="raid-0">RAID 0</h4>
+<p><img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g57x9rxdwvj306f06kaba.jpg" alt="" />
+<strong>RAID 0能有效提升硬盘数据的吞吐速度，但不具备数据备份和恢复功能。</strong></p>
+
+<h4 id="raid-1">RAID 1</h4>
+<p><img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g57xbb5xdsj3072081q4q.jpg" alt="" />
+<strong>将两块硬盘绑定，可理解为右侧为左侧的备份，可用率降低，增大了系统计算的负载。</strong></p>
+
+<h4 id="raid-5">RAID 5</h4>
+<p><img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g57xd6n16kj30gr0brabm.jpg" alt="" />
+<strong>硬盘中<code class="highlighter-rouge">parity</code>部分为数据奇偶校验信息（压缩过的信息），“妥协地”兼顾硬盘设备的读写速度、数据安全性和存储成本问题。</strong></p>
+
+<h4 id="raid-10">RAID 10</h4>
+<p><img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g57xfm46aoj30k00b1agt.jpg" alt="" />
+<strong>RAID 10 为 RAID 0 和 RAID 1 的组合体。</strong></p>
+
+<h4 id="部署磁盘阵列">部署磁盘阵列</h4>
+<ul>
+  <li><code class="highlighter-rouge">mdadm</code> 命令管理Linux2系统中的软件RAID硬盘阵列
+    <ul>
+      <li><code class="highlighter-rouge">mdadm -Cv /dev/md0 -a yes -n 4 -l 10 /dev/sdb /dev/sdc /dev/sdd /dev/sde</code></li>
+      <li>上述命令创建RAID 10 ，名为 <code class="highlighter-rouge">/dev/md0</code>,设备数量为<strong>4</strong>，RAID 级别为 10，四块硬盘分别为/dev/sdbcde
+<img src="https://i.loli.net/2019/07/23/5d37238f0a9ec46739.png" alt="" /></li>
+    </ul>
+  </li>
+  <li>磁盘阵列组RAID部署好之后，将其格式化为 <code class="highlighter-rouge">ext4</code>格式
+    <ul>
+      <li><code class="highlighter-rouge">mkfs.ext4 /dev/md0</code></li>
+    </ul>
+  </li>
+  <li>再次，创建挂载点然后把硬盘设备进行挂载操作
+    <ul>
+      <li>
+        <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>[root@linuxprobe ~]# mkdir /RAID
+[root@linuxprobe ~]# mount /dev/md0 /RAID   //挂载在新建目录/RAID下
+</pre></td></tr></tbody></table></code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li>把挂载信息写入到配置文件中，使其永久生效</li>
+</ul>
+
+<h4 id="磁盘修复">磁盘修复</h4>
+<p>详见 👉 <a href="https://www.linuxprobe.com/chapter-07.html">第七章</a></p>
+
+<h2 id="lvm逻辑卷管理器">LVM逻辑卷管理器</h2>
+<h5 id="何为lvm">何为LVM？</h5>
+<p><strong>LVM是一种非常普及的硬盘资源管理技术，允许用户对硬盘资源进行动态调整</strong></p>
+
+<p><img src="https://i.loli.net/2019/07/23/5d3725aa05cd111142.png" alt="" />
+<img src="https://i.loli.net/2019/07/23/5d3725846df2d66486.png" alt="" /></p>
+
+<p>详细可见 上述链接</p>
+
+<blockquote>
+  <p>😘 Mrs.Lgg</p>
+</blockquote>
+
+<h2 id="图片笔记">图片笔记</h2>
+<h5 id="721">7.21</h5>
+<p><img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g57xonhx1oj30qo0e0abj.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g57xoni4ikj30qo0e0wfz.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g57xoning1j30qo0e0abd.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g57xonkpxlj30t71hc44u.jpg" alt="" /></p>
+
+<h5 id="722">7.22</h5>
+<p><img src="https://i.loli.net/2019/07/23/5d37261d572c719282.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/23/5d37261e1376e20500.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/23/5d37261ec394a48657.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/23/5d37261f95fc468935.jpg" alt="" /></p>
+:ET

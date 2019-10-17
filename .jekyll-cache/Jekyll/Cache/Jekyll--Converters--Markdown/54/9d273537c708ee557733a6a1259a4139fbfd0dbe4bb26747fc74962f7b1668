@@ -1,0 +1,65 @@
+I"�
+<blockquote>
+  <p>本节主要学习了管道符和重定向，任意门，很有趣的比喻。</p>
+</blockquote>
+
+<h2 id="输入输出重定向">输入输出重定向</h2>
+<h4 id="输出重定向">输出重定向</h4>
+<p><strong>将要输出到屏幕上的信息写入到指定文件</strong></p>
+<ul>
+  <li>’&gt;’   清空</li>
+  <li>’»’  追加</li>
+  <li>‘2&gt;’  输入错误信息</li>
+  <li>‘&amp;&gt;’  无论正确错误，均输入</li>
+</ul>
+
+<h4 id="输入重定向">输入重定向</h4>
+<p><strong>把文件导入到命令中</strong></p>
+<ul>
+  <li>’&lt;’   将文件作为命令的标准输入</li>
+</ul>
+
+<p>例：<code class="highlighter-rouge">wc -l 1.txt</code> 输出 <code class="highlighter-rouge">18 1.txt</code>，而 <code class="highlighter-rouge">wc -l &lt; 1.txt</code> 输出 <code class="highlighter-rouge">18</code></p>
+
+<p>由此可得，<code class="highlighter-rouge">&lt;</code> 是将文件变为一个文件去输入，而不是一个<strong>对象</strong></p>
+
+<h2 id="管道符">管道符</h2>
+<p><strong>格式： “命令A | 命令B”，作用是 “ 把前一个命令原本要输出到屏幕上的数据当做后一个命令的标准输入 ”</strong></p>
+
+<p>刘遄老师举了一个很形象的例子，<strong>任意门</strong>，可搭配定义理解</p>
+
+<h2 id="命令行的通配符">命令行的通配符</h2>
+<p><strong>主要用来针对一些文件名字有相同特征的文件</strong></p>
+<ul>
+  <li>‘*’   所有</li>
+  <li>？    单个字符</li>
+  <li>[0-9] 数字</li>
+  <li>[a-z][A-Z]    字母</li>
+</ul>
+
+<h2 id="转义字符">转义字符</h2>
+<ul>
+  <li>反斜杠（\）   转义后面的一个字符，使之成普通字符</li>
+  <li>单引号（’’)   转义内部所有字符，使之成普通字符</li>
+  <li>双引号（”“）  不进行任何处理</li>
+  <li>反引号（``)   执行内部命令后返回结果</li>
+</ul>
+
+<h2 id="重要的环境变量">重要的环境变量</h2>
+<ul>
+  <li><code class="highlighter-rouge">alias 别名 命令</code> 创建一个命令别名 （unalias 取消）</li>
+  <li><code class="highlighter-rouge">env</code>       查看所有环境变量</li>
+</ul>
+
+<p><img src="https://i.loli.net/2019/07/13/5d29f94fc628894285.png" alt="" /></p>
+
+<p><strong>注意：</strong>自己新建的变量不具备全局性，可用export使其变为全局变量，但重启仍会消失。</p>
+
+<hr />
+
+<h2 id="图片笔记">图片笔记</h2>
+<p><img src="https://i.loli.net/2019/07/14/5d2b08c64f7cf68020.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/14/5d2b08c6f091471183.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/14/5d2b08c7a1ea887753.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/14/5d2b08c85d53381991.jpg" alt="" /></p>
+:ET

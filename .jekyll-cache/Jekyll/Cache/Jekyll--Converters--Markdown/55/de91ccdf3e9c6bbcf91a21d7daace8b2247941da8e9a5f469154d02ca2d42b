@@ -1,0 +1,54 @@
+I"�<blockquote>
+  <p>对应《算法导论》第二章</p>
+</blockquote>
+
+<p>类比扑克牌，假设我们现在手里已经有了几张牌，再拿到新的一张。则需要与已拿到的对比，并插入。</p>
+
+<p>特点：<strong>小规模可以，大规模效率太低</strong></p>
+
+<p><img src="https://i.loli.net/2019/07/10/5d2558b216bd732212.png" alt="" />
+这是一个就地算法</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre>        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="o">{</span><span class="mi">0</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">};</span>    <span class="c1">//排序数组</span>
+
+        <span class="c1">//key比较，如果小于前一个，则前一个后移，递推。否则不动</span>
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>  <span class="c1">//复杂度 o(n)</span>
+            <span class="kt">int</span> <span class="n">key</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>   <span class="c1">//新值</span>
+            <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>        <span class="c1">//需要对比的前一个值</span>
+
+            <span class="c1">//如果新值小于前值</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">key</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">]){</span>               <span class="c1">//复杂度 o(n)</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">];</span><span class="c1">//前值后移一位</span>
+                <span class="n">arr</span><span class="o">[</span><span class="n">j</span><span class="o">]</span> <span class="o">=</span> <span class="n">key</span><span class="o">;</span>
+
+                <span class="k">if</span><span class="o">(</span> <span class="o">(</span><span class="n">j</span><span class="o">--)</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>            <span class="c1">//此处实现了 j-- 并判断是否到头</span>
+                    <span class="k">break</span><span class="o">;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>代码分析：</p>
+
+<p>后一个数与前面的数一次比较，若小于前面的数，则前面的数后移一位（始终是相邻两位的比较）</p>
+
+<p>已经排好序的部分为循环不变式
+复杂度为 <code class="highlighter-rouge">o(n^2)</code>(最坏情况),<code class="highlighter-rouge">o(n)</code>(最好情况)</p>
+:ET

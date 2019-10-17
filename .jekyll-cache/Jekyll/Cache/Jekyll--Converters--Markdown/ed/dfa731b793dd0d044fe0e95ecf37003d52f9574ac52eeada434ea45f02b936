@@ -1,0 +1,193 @@
+I"7+<blockquote>
+  <p>栈和队列过于简单，此处不再赘述</p>
+</blockquote>
+
+<h4 id="自制循环队列">自制循环队列</h4>
+<h5 id="何为循环队列">何为循环队列</h5>
+<p><img src="https://images2015.cnblogs.com/blog/1125876/201705/1125876-20170514162342785-997558567.jpg" alt="" /></p>
+
+<h4 id="思路">思路</h4>
+<ul>
+  <li>循环队列重在<strong>循环</strong>，那么其中关键点在于如何控制循环的头和尾</li>
+  <li>通过牺牲一个元素：<img src="https://images2018.cnblogs.com/blog/1273298/201803/1273298-20180320155833814-440471285.png" alt="" /></li>
+  <li>这样的话，我们可以得出队列为空和队列满的情况，当<code class="highlighter-rouge">rear == front</code>时为空，当<code class="highlighter-rouge">rear + 1 = front</code>即为满</li>
+</ul>
+
+<h5 id="具体实现见代码">具体实现见代码</h5>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Test</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span>  <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="nc">MyQueue</span> <span class="n">myQueue</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">MyQueue</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>
+
+        <span class="n">myQueue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">();</span>     <span class="c1">//为空</span>
+        <span class="n">myQueue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span> 
+        <span class="n">myQueue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">7</span><span class="o">);</span> 
+        <span class="n">myQueue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">5</span><span class="o">);</span>    
+        <span class="n">myQueue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">4</span><span class="o">);</span>
+        <span class="n">myQueue</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="mi">3</span><span class="o">);</span>
+
+        <span class="n">myQueue</span><span class="o">.</span><span class="na">isFull</span><span class="o">();</span>   <span class="c1">//已满</span>
+
+        <span class="n">myQueue</span><span class="o">.</span><span class="na">each</span><span class="o">();</span> <span class="c1">//[4, 3, 0, 5, 7, 5]</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+<span class="kd">class</span> <span class="nc">MyQueue</span><span class="o">{</span>
+    <span class="kt">int</span> <span class="o">[]</span> <span class="n">queue</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">head</span><span class="o">;</span>
+    <span class="kt">int</span> <span class="n">foot</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="nf">MyQueue</span><span class="o">(</span><span class="kt">int</span> <span class="n">lenght</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">int</span><span class="o">[</span><span class="n">lenght</span><span class="o">+</span><span class="mi">1</span><span class="o">];</span>  <span class="c1">//通过牺牲一个空间来换取循环的可能，所以若new 一个 n 个长度的队列，那么我们应该使用 n+1 长度，因为有一个是被牺牲的</span>
+        <span class="n">head</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+        <span class="n">foot</span> <span class="o">=</span> <span class="mi">3</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//添加元素</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">add</span><span class="o">(</span><span class="kt">int</span> <span class="n">num</span><span class="o">){</span>
+        <span class="c1">//先判断是否满</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">isFull</span><span class="o">()){</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"满了，不能在加了"</span><span class="o">);</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="c1">//超过队列长度，返回队头</span>
+        <span class="k">if</span><span class="o">(</span> <span class="n">foot</span> <span class="o">==</span> <span class="n">queue</span><span class="o">.</span><span class="na">length</span><span class="o">)</span>
+            <span class="n">foot</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="n">queue</span><span class="o">[</span><span class="n">foot</span><span class="o">++]</span> <span class="o">=</span> <span class="n">num</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//弹出元素</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">pop</span><span class="o">(){</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">isEmpty</span><span class="o">())</span>
+            <span class="k">return</span><span class="o">;</span>
+        <span class="n">foot</span><span class="o">--;</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">foot</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+            <span class="n">foot</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//判断是否已满</span>
+    <span class="c1">//当head 不是0时，判断head是否在foot前面即可</span>
+    <span class="c1">//当head为0时，需要考虑到 foot 在序列尾的情况，应加一在比较</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isFull</span><span class="o">(){</span>
+        <span class="c1">//if ((foot + 1) % queue.length == head)    另外一种判断方法    鸽笼定理</span>
+        <span class="k">if</span><span class="o">(</span> <span class="n">head</span> <span class="o">==</span> <span class="o">(</span><span class="n">foot</span><span class="o">+</span><span class="mi">1</span> <span class="o">==</span> <span class="n">queue</span><span class="o">.</span><span class="na">length</span> <span class="o">?</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">foot</span><span class="o">+</span><span class="mi">1</span> <span class="o">)</span> <span class="o">){</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"已满"</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"还未满"</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="c1">//是否为空</span>
+    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isEmpty</span><span class="o">(){</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">head</span> <span class="o">==</span> <span class="n">foot</span><span class="o">){</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"为空"</span><span class="o">);</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="c1">//输出所有元素</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">each</span><span class="o">(){</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">toString</span><span class="o">(</span><span class="n">queue</span><span class="o">));</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h5 id="注意">注意：</h5>
+<ul>
+  <li>因为我们是牺牲掉一个元素，所以若new 一个 n 个长度的队列，那么我们应该使用 n+1 长度</li>
+  <li>注意判断当<code class="highlighter-rouge">foot == arr.length</code> 时，重置foot</li>
+  <li><code class="highlighter-rouge">head == (foot+1 == queue.length ? 0 : foot+1 )</code>判断是否满 （<strong>鸽笼定理</strong>）
+    <ul>
+      <li>通过余数也可求出 <code class="highlighter-rouge">if ((foot + 1) % queue.length == head) </code></li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="循环链表">循环链表</h4>
+<p>和<strong>循环队列</strong>类似，需要有一个哨兵元素来连接首位，详细可看图片笔记</p>
+
+<p>参考文章：<a href="https://www.cnblogs.com/curo0119/p/8608606.html">循环队列</a></p>
+<h2 id="笔记">笔记</h2>
+<p><img src="https://i.loli.net/2019/08/02/5d4423b61203693819.jpg" alt="" />
+<img src="https://i.loli.net/2019/08/02/5d4423b68a9df97790.jpg" alt="" />
+<img src="https://i.loli.net/2019/08/02/5d4423b70e90536358.jpg" alt="" /></p>
+
+:ET

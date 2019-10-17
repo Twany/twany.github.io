@@ -1,0 +1,6 @@
+I"N<h2 id="关于layui获取表格中复选框对应数据的方法">关于layUI获取表格中复选框对应数据的方法</h2>
+<p>今天在做博客后台项目最后一个功能，就是使用layUI的多选功能进行删除勾选数据
+如：
+<img src="https://img-blog.csdnimg.cn/20181211211532468.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzIwMjM2NA==,size_8,color_FFFFFF,t_70" alt="在这里插入图片描述" />
+去网上百度了各种方法，无一不是特别麻烦。就想了另外的一种方案：</p>
+:ET

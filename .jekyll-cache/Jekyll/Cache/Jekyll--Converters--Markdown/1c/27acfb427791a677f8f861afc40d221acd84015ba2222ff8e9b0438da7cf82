@@ -1,0 +1,5 @@
+I"G<h5 id="之前使用swoole-和workman因水平有限并为实现需求经过一番百度之后发现了基于workerman的-gatewayworker以下为-gatewayworker-的简介">之前使用swoole 和workman，因水平有限，并为实现需求。经过一番百度之后，发现了基于workerman的 GatewayWorker，以下为 GatewayWorker 的简介：</h5>
+<blockquote>
+  <p>GatewayWorker基于Workerman开发的一个项目框架，用于快速开发TCP长连接应用，例如app推送服务端、即时IM服务端、游戏服务端、物联网、智能家居等等</p>
+</blockquote>
+:ET

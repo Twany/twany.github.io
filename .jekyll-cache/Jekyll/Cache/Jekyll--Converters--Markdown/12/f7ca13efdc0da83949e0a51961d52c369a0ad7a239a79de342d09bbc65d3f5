@@ -1,0 +1,4 @@
+I"�<h2 id="iptables">iptables</h2>
+<h4 id="策略与规则链">策略与规则链</h4>
+<p>防火墙会<strong>从上而下</strong>读取配置，在找到匹配项后<strong>结束匹配</strong>。</p>
+:ET

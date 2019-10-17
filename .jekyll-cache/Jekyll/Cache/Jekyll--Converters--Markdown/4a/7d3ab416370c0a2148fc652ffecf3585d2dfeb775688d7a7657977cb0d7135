@@ -1,0 +1,136 @@
+I"�<h2 id="配置网络服务">配置网络服务</h2>
+<h4 id="配置网络参数">配置网络参数</h4>
+<p>配置网络服务有4种方式：</p>
+<ul>
+  <li>编辑服务 <code class="highlighter-rouge">vim /etc/sysconfig/network-scripts/ifcfg-enoxxxxxxxx</code> （其中xxxxx可通过<code class="highlighter-rouge">ifconfig</code>命令得到）</li>
+  <li>图形化设置：<code class="highlighter-rouge">nmtui</code></li>
+  <li>图形化设置：<code class="highlighter-rouge">nm-connection-editro</code></li>
+  <li>RHEL 7 右上角设置</li>
+</ul>
+
+<p>详见：<a href="https://blog.csdn.net/xin1889/article/details/80025564">Linux-配置网络的四种方法</a> 、<a href="https://www.linuxprobe.com/chapter-09.html#911">配置网卡参数</a></p>
+
+<h4 id="创建网络会话">创建网络会话</h4>
+<blockquote>
+  <p>RHEL和CentOS系统默认使用NetworkManager来提供网络服务，这是一种动态管理网络配置的守护进程，能够让网络设备保持连接状态。可以使用nmcli命令来管理Network Manager服务。nmcli是一款基于命令行的网络配置工具，功能丰富，参数众多。它可以轻松地查看网络信息或网络状态：</p>
+</blockquote>
+
+<p>RHEL7系统支持网络会话功能，允许用户在多个配置文件中快速切换（非常类似于firewalld防火墙服务中的区域技术）。</p>
+
+<p>格式：使用<code class="highlighter-rouge">nmcli connection add con-name type iframe</code></p>
+
+<p>成功创建后，可通过 <code class="highlighter-rouge">nmcli connection show</code> 查看</p>
+
+<h2 id="远程控制服务">远程控制服务</h2>
+<h4 id="配置-sshd-服务">配置 sshd 服务</h4>
+<blockquote>
+  <p>SSH（Secure Shell）是一种能够以安全的方式提供远程登录的协议，也是目前远程管理Linux系统的首选方式。</p>
+</blockquote>
+
+<p><code class="highlighter-rouge">sshd</code> 提供了两种验证方式</p>
+<ul>
+  <li>基于口令的验证—用账户和密码来验证登录；</li>
+  <li>基于密钥的验证—需要在本地生成密钥对，然后把密钥对中的公钥上传至服务器，并与服务器中的公钥进行比较；该方式相较来说更安全。</li>
+</ul>
+
+<p>此处我们只讲如何配置使得<code class="highlighter-rouge">root</code>用户不能使用sshd服务，保障系统安全性</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>vim /etc/ssh/sshd_config
+<span class="nt">--------</span>
+...
+PermitRootLogin no //原来是yes，允许 
+...
+<span class="nt">--------</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h4 id="sshd安全密钥验证">sshd安全密钥验证</h4>
+<ol>
+  <li>在客户端主机生成“密钥树”     <code class="highlighter-rouge">ssh-keygen</code></li>
+  <li>把客户端主机生成的公钥文件发到远程主机(服务器)   <code class="highlighter-rouge">ssh-copy-id 192.168.10.10</code></li>
+  <li>对服务器进行设置，使其只允许密钥登录 <code class="highlighter-rouge">vim /etc/ssh/sshd_config</code> =&gt; <code class="highlighter-rouge">PasswordAuthentication no</code> =&gt; <code class="highlighter-rouge">systemctl restart sshd</code></li>
+  <li>测试 <code class="highlighter-rouge">ssh 192.168.10.10</code> 成功连接</li>
+</ol>
+
+<h4 id="远程传输命令">远程传输命令</h4>
+<p><code class="highlighter-rouge">scp</code>命令</p>
+
+<h4 id="不间断会话服务">不间断会话服务</h4>
+<p>连接主机，有一个问题：当与远程主机的会话被关闭，在远程主机运行的命令也将被关闭</p>
+
+<p><code class="highlighter-rouge">screen</code> 就是为了解决网络异常中断或为了同时控制多个远程终端窗口而设计的程序。有以下功能</p>
+<ul>
+  <li><strong>会话恢复</strong>：即便网络中断，也可让会话随时恢复，确保用户不会失去对远程会话的控制。</li>
+  <li><strong>多窗口</strong>：每个会话都是独立运行的，拥有各自独立的输入输出终端窗口，终端窗口内显示过的信息也将被分开隔离保存，以便下次使用时依然能看到之前的操作记录。</li>
+  <li><strong>会话共享</strong>：当多个用户同时登录到远程服务器时，便可以使用会话共享功能让用户之间的输入输出信息共享。</li>
+</ul>
+
+<h5 id="screen-的安装"><code class="highlighter-rouge">screen</code> 的安装</h5>
+<p>安装需要用到<code class="highlighter-rouge">yum</code>，首先我们需要配置Yum源</p>
+<ol>
+  <li><img src="https://www.linuxprobe.com/wp-content/uploads/2015/05/%E7%A1%AE%E8%AE%A4%E5%85%89%E7%9B%98%E5%B7%B2%E8%A2%AB%E9%80%89%E4%B8%AD.png" alt="" /></li>
+  <li>只需要在设备状态中的<strong>已连接</strong>打上勾即可，<a href="https://www.linuxprobe.com/tools">镜像下载地址</a></li>
+  <li>将系统镜像挂载到<code class="highlighter-rouge">/media/cdrom</code>目录
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre> <span class="nv">$ </span><span class="nb">mkdir</span> <span class="nt">-p</span> /media/cdrom     //创建挂载目录
+ <span class="nv">$ </span>mount /dev/cdrom /media/cdrom 进行挂载
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>配置Yum仓库配置文件
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+</pre></td><td class="rouge-code"><pre> <span class="o">[</span>root@linuxprobe ~]# vim /etc/yum.repos.d/rhel7.repo
+ <span class="nt">----vim</span>模式
+ <span class="o">[</span>rhel7]
+ <span class="nv">name</span><span class="o">=</span>rhel7
+ <span class="nv">baseurl</span><span class="o">=</span>file:///media/cdrom
+ <span class="nv">enabled</span><span class="o">=</span>1
+ <span class="nv">gpgcheck</span><span class="o">=</span>0
+ <span class="nt">-----vim</span>模式
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li>下载 <code class="highlighter-rouge">yum install screen</code></li>
+</ol>
+
+<h4 id="管理远程会话">管理远程会话</h4>
+<p><code class="highlighter-rouge">screen + 参数</code></p>
+<ul>
+  <li>-S    创建会话窗口</li>
+  <li>-r    恢复指定会话（后加对应序号或名称）</li>
+  <li>-x    一次性恢复所有会话</li>
+  <li>-ls   显示所有会话</li>
+  <li>-wipe 删除会话</li>
+  <li>exit  退出会话</li>
+</ul>
+
+<p>并不是要先创建会话，再开始工作。也可以<code class="highlighter-rouge">screen vim a.txt</code>，命令执行结束会话结束</p>
+
+<h4 id="会话共享">会话共享</h4>
+<p>多人控制一台主机，共享屏幕内容</p>
+
+<p>步骤：</p>
+<ol>
+  <li>使用sshd将终端 <strong>A</strong> 远程连接到服务器  <code class="highlighter-rouge">ssh 192.168.10.10</code></li>
+  <li>创建会话 <code class="highlighter-rouge">screen -S linuxprobe</code></li>
+  <li>使用sshd将终端 <strong>B</strong> 远程连接到服务器  <code class="highlighter-rouge">ssh 192.168.10.10</code></li>
+  <li>获取会话 <code class="highlighter-rouge">screen -x</code></li>
+  <li>至此，两台终端已实现会话共享</li>
+</ol>
+
+<h2 id="图片笔记">图片笔记</h2>
+<p><img src="https://i.loli.net/2019/08/03/GnlNe4t6XuwBbWU.jpg" alt="" />
+<img src="https://i.loli.net/2019/08/03/q7ojK9Q2haWwBJS.jpg" alt="" />
+<img src="https://i.loli.net/2019/08/03/YqiCd1aneHv38fO.jpg" alt="" />
+<img src="https://i.loli.net/2019/08/03/BxN4iwog1K8fydW.jpg" alt="" /></p>
+:ET

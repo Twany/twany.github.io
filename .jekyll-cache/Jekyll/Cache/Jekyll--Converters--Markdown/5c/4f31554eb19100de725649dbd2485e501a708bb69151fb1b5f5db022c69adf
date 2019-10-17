@@ -1,0 +1,48 @@
+I"V	<blockquote>
+  <p>跟我学Linux第二日</p>
+</blockquote>
+
+<h2 id="部署虚拟机环境和安装linux系统">部署虚拟机环境和安装Linux系统</h2>
+<p>省略，详见<a href="https://www.linuxprobe.com/chapter-01.html">第一章</a></p>
+
+<h4 id="rpm和yum">RPM和Yum</h4>
+
+<p>RPM包括源代码和安装规则，能自动分析依赖关系</p>
+
+<p>Yum为软件仓库，即RPM包的集合，能自动解决依赖关系</p>
+
+<p>关系：
+!()[https://i.loli.net/2019/07/10/5d253aea094d790787.png]</p>
+
+<h4 id="systemd-初始化进程">systemd 初始化进程</h4>
+<p>RHEL 7 系统与之前的初始化命令不同</p>
+
+<ul>
+  <li>systemctl start foo.service   启动服务</li>
+  <li>systemctl stop foo.service    停止服务</li>
+  <li>systemctl restart foo.service 重启服务 –&gt;服务PID更改</li>
+  <li>systemctl reload foo.service  重新加载配置文件（不终止服务）–&gt;服务PID不变</li>
+  <li>systemctl status foo.service  查看服务状态</li>
+</ul>
+
+<h2 id="新手必须掌握的linux命令">新手必须掌握的Linux命令</h2>
+<p><strong>参数格式：短和短能合并，其他不能</strong></p>
+
+<p>命令详见课本<a href="https://www.linuxprobe.com/chapter-01.html">第一章</a></p>
+
+<hr />
+
+<h2 id="图片笔记因第二三天内容相似故融为一处">图片笔记（因第二、三天内容相似，故融为一处）：</h2>
+<p><img src="https://i.loli.net/2019/07/10/5d2542ca9275e93727.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/10/5d254304273af51594.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/10/5d254357db7c730753.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4ui4cglbsj33402c0qv8.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4ui5nntkdj33402c04qt.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4ui5sidhtj33402c0qv8.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4ui5xrus0j33402c0kjo.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4ui62vwzhj33402c0npg.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4ui67apv2j33402c0kjo.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4ui6by3k8j33402c0hdw.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4ui6ftsczj33402c0hdw.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4ui6kgkxlj33402c0qv8.jpg" alt="" /></p>
+:ET

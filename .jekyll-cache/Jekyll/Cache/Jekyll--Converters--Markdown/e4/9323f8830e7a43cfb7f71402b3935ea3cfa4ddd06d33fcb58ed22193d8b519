@@ -1,0 +1,230 @@
+I"V@<h2 id="最小值计算">最小值计算</h2>
+<h5 id="问题对于概率值集-p取最小的两个值求和再放入到-p-中直至-p-仅存唯一元素-1">问题：对于概率值集 P，取最小的两个值求和再放入到 P 中，直至 P 仅存唯一元素 1</h5>
+
+<h4 id="思路">思路</h4>
+<ol>
+  <li>首先我们需要两个队列，第一个队列存放原概率集，第二个概率存放相加之和的和</li>
+  <li>计算之前，我们首先需要对队列A进行排序，使其按由小到大排列</li>
+  <li>开始求和，题目要求把每次最小的两个值求和，最小值有两种存在情况
+    <ol>
+      <li>存在于队列A</li>
+      <li>存在于队列B（相加之后的值）</li>
+    </ol>
+  </li>
+  <li>对两个队列的首元素进行比较，最小的就是所有元素的最小值其一，另外一个元素同理</li>
+  <li>取得最小的两个值，并从原队列删除。然后把和再次存入队列B中，继续循环</li>
+</ol>
+
+<p><strong>所以，我们的问题就转化为比较两个队列的最小值，且这两个队列按由小到大已排好序</strong></p>
+
+<p>代码如下：</p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Album</span>
+<span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//  队头删除，队尾插入</span>
+        <span class="c1">//  offer 添加，poll 删除，peek查看头</span>
+        <span class="nc">Queue</span><span class="o">&lt;</span><span class="nc">Double</span><span class="o">&gt;</span> <span class="n">queue</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LinkedList</span><span class="o">();</span> <span class="c1">//原队列</span>
+
+        <span class="nc">Queue</span><span class="o">&lt;</span><span class="nc">Double</span><span class="o">&gt;</span> <span class="n">newQ</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">LinkedList</span><span class="o">();</span>  <span class="c1">//相加存放队列</span>
+
+        <span class="c1">//添加元素</span>
+        <span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mf">0.0625</span><span class="o">);</span><span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mf">0.0625</span><span class="o">);</span><span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mf">0.125</span><span class="o">);</span> <span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mf">0.125</span><span class="o">);</span>
+        <span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mf">0.0625</span><span class="o">);</span><span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mf">0.0625</span><span class="o">);</span><span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mf">0.125</span><span class="o">);</span><span class="n">queue</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="mf">0.125</span><span class="o">);</span>
+
+
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">queue</span><span class="o">.</span><span class="na">size</span><span class="o">()-</span><span class="mi">1</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+          <span class="c1">//因为是Double类型，默认值为 0 的话需要进行类型转换</span>
+          <span class="nc">Double</span> <span class="n">first</span><span class="o">=</span> <span class="nc">Double</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span><span class="nc">Double</span> <span class="n">second</span> <span class="o">=</span> <span class="nc">Double</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+          
+          <span class="c1">//当queue队列不为空，取出首元素</span>
+          <span class="k">if</span><span class="o">(!</span><span class="n">queue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+              <span class="n">first</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+          <span class="o">}</span>
+          <span class="c1">//当新队列为空，那么弹出，供第二个元素的取得</span>
+          <span class="k">if</span><span class="o">(</span><span class="n">newQ</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+              <span class="c1">//弹出queue的首位，表示已经确定了最小数就是它</span>
+              <span class="n">queue</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+          <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">newQ</span><span class="o">.</span><span class="na">peek</span><span class="o">()</span> <span class="o">&lt;=</span> <span class="n">first</span> <span class="o">||</span> <span class="n">queue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span> <span class="c1">//短路表达式，防止原队列为空，first无法赋值</span>
+              <span class="n">first</span> <span class="o">=</span> <span class="n">newQ</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+              <span class="c1">//此处不弹出queue的first，因为最小数已转移至newQ中</span>
+          <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+              <span class="c1">//当newQ不为空，且已经确定了最小数就是queue的首位，弹出</span>
+              <span class="n">queue</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+          <span class="o">}</span>
+
+          <span class="c1">//second 和 first同理</span>
+          <span class="k">if</span><span class="o">(!</span><span class="n">queue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+              <span class="n">second</span> <span class="o">=</span> <span class="n">queue</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+          <span class="o">}</span>
+          <span class="k">if</span><span class="o">(</span><span class="n">newQ</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+              <span class="n">queue</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+          <span class="o">}</span><span class="k">else</span> <span class="k">if</span><span class="o">(</span><span class="n">newQ</span><span class="o">.</span><span class="na">peek</span><span class="o">()</span> <span class="o">&lt;=</span> <span class="n">second</span> <span class="o">||</span> <span class="n">queue</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">()){</span>
+              <span class="n">second</span> <span class="o">=</span> <span class="n">newQ</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+          <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+              <span class="n">queue</span><span class="o">.</span><span class="na">poll</span><span class="o">();</span>
+          <span class="o">}</span>
+
+          <span class="c1">//将最小值插入到新队列</span>
+          <span class="n">newQ</span><span class="o">.</span><span class="na">offer</span><span class="o">(</span><span class="n">first</span><span class="o">+</span><span class="n">second</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="majority-问题">Majority 问题</h2>
+<h5 id="问题集合中出现一半的数称为众数过半数如何求解">问题：集合中出现一半的数称为<strong>众数（过半数）</strong>，如何求解</h5>
+
+<h4 id="方法一元素去重">方法一（元素去重）</h4>
+<p>对数组进行元素去重，统计输出次数，寻找众数。复杂度为<code class="highlighter-rouge">o(nlogn)</code>，较高</p>
+
+<h4 id="方法二蓄水池--消砖块">方法二（蓄水池 || 消砖块）</h4>
+<p>关键：当一个序列中存在众数时，其占比肯定<strong>超过50%</strong></p>
+
+<h5 id="思路-1">思路</h5>
+<ol>
+  <li>当池中元素为空（0），遇到新元素将其添加进来，并设为标记元素</li>
+  <li>当池中元素不为空
+    <ol>
+      <li>遇到<strong>相同</strong>元素：计数器+1</li>
+      <li>遇到<strong>不同</strong>元素：计数器-1</li>
+    </ol>
+  </li>
+  <li>最后，对标记元素进行检验，看是否大于出现次数大于一半</li>
+</ol>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Test</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="o">{</span><span class="mi">1</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">9</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">6</span><span class="o">,</span><span class="mi">7</span><span class="o">,</span><span class="mi">6</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">4</span><span class="o">,</span><span class="mi">4</span><span class="o">};</span>
+
+        <span class="c1">//蓄水池计数器</span>
+        <span class="kt">int</span> <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+
+        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
+            <span class="c1">//当蓄水池为空，元素加入，并设立记号元素</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+                <span class="n">count</span><span class="o">++;</span>
+                <span class="n">temp</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">];</span>
+            <span class="o">}</span><span class="k">else</span><span class="o">{</span><span class="c1">//蓄水池不为空的情况</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">==</span> <span class="n">temp</span><span class="o">){</span> <span class="c1">//新元素和池中元素相同</span>
+                    <span class="n">count</span><span class="o">++;</span>
+                <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+                    <span class="n">count</span><span class="o">--;</span>    <span class="c1">//不同</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="c1">//此时的count并不是众数的个数，而是已经被抵消之后的数量，所有我们应进行检验</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"无解"</span><span class="o">);</span>
+        <span class="o">}</span><span class="k">else</span><span class="o">{</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">:</span> <span class="n">arr</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">if</span><span class="o">(</span><span class="n">temp</span> <span class="o">==</span> <span class="n">i</span><span class="o">){</span>
+                    <span class="n">count</span><span class="o">++;</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+
+            <span class="k">if</span><span class="o">(</span> <span class="mi">2</span><span class="o">*</span><span class="n">count</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">){</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">"不足一半，无解"</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">temp</span> <span class="o">+</span> <span class="s">"是众数，出现了"</span> <span class="o">+</span> <span class="n">count</span> <span class="o">+</span> <span class="s">"次"</span><span class="o">);</span> <span class="c1">//输出 “4是众数，出现了9此”</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+:ET

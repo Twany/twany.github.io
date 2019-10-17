@@ -1,0 +1,106 @@
+I"h<h2 id="关于layui获取表格中复选框对应数据的方法">关于layUI获取表格中复选框对应数据的方法</h2>
+<p>今天在做博客后台项目最后一个功能，就是使用layUI的多选功能进行删除勾选数据
+如：
+<img src="https://img-blog.csdnimg.cn/20181211211532468.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzIwMjM2NA==,size_8,color_FFFFFF,t_70" alt="在这里插入图片描述" />
+去网上百度了各种方法，无一不是特别麻烦。就想了另外的一种方案：</p>
+
+<p><strong>复选框用的是layUI的标签：</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre> &lt;div class="layui-unselect header layui-form-checkbox" lay-skin="primary"&gt;
+ 	&lt;i class="layui-icon"&gt;&amp;#xe605;&lt;/i&gt;
+ &lt;/div&gt;
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><strong>红色批量删除按钮标签：</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>&lt;button class="layui-btn layui-btn-danger" onclick="delAll()"&gt;
+	&lt;i class="layui-icon"&gt;&lt;/i&gt;批量删除
+&lt;/button&gt;
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>button标签内置一个deall()函数；
+下面是deall()代码：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+</pre></td><td class="rouge-code"><pre>      function delAll (argument) {
+		  var data = tableCheck.getData();
+       		
+		  //选中的个数
+		  var long = data.length;
+		  var arr = [];
+		  
+		  //给数组赋值选中的id
+		  for(var i=0;i&lt;long;i++){
+		  	  //children('.td)为选中class为td的值，这个值为我们要选中的id.
+			  arr[i] = $(".layui-form-checked").not('.header').parents('tr').children('.td').eq(i).html();
+		  }
+
+		
+        layer.confirm('确认要删除吗？'+data,function(index){
+
+            layer.msg('删除成功', {icon: 1});
+		    //	将数据arr发送给php脚本处理
+            $.post('http://blog.com/admin/server/acticleMove.php',{cid:arr},function(res){},'json');
+			$(".layui-form-checked").not('.header').parents('tr').remove();
+        });
+      }
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="总结"><strong>**总结</strong>：**</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>难点在于如何获得到勾选的值
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>  arr[i] = $(".layui-form-checked").not('.header').parents('tr').children('.td').eq(i).html();
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>因为数据是遍历出来的，所以arr是一个数组，关键就在于给arr赋值
+最开始我用的是：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>  arr[i] = $(".layui-form-checked").not('.header').parents('tr').children('.td').html();
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>与上处相比少了一个eq(i)，这就导致arr始终是一个值
+只有通过遍历才能把每个值都遍历出来并赋给arr数组
+（
+此处有一个小知识点那就是js中数组的创建：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>var arr = [];
+//或者
+var arr = new Array();
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>）</p>
+
+:ET

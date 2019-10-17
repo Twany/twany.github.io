@@ -1,0 +1,78 @@
+I"�<h2 id="iptables">iptables</h2>
+<h4 id="策略与规则链">策略与规则链</h4>
+<p>防火墙会<strong>从上而下</strong>读取配置，在找到匹配项后<strong>结束匹配</strong>。</p>
+
+<p>iptables 服务把用于处理货过滤流量的策略条目称为规则，多条规则可以组成一个规则链。</p>
+
+<p>当有了规则之后，不一定能通过iptables，因为还有“动作”限制：</p>
+<ul>
+  <li><code class="highlighter-rouge">ACCEPT</code>  允许</li>
+  <li><code class="highlighter-rouge">REJECT</code>  拒绝但返回提示</li>
+  <li><code class="highlighter-rouge">LOG</code>     记录日志</li>
+  <li><code class="highlighter-rouge">DROP</code>    拒绝且无响应</li>
+</ul>
+
+<h4 id="iptables-中基本的命令参数和使用">iptables 中基本的命令参数和使用</h4>
+<p>详见👉 <a href="https://www.linuxprobe.com/chapter-08.html#822">基本的命令参数</a></p>
+
+<h2 id="firewalld">firewalld</h2>
+<p>RHEL 7系统中集成了多款防火墙管理工具，其中firewalld（Dynamic Firewall Manager of Linux systems，Linux系统的动态防火墙管理器）服务是默认的防火墙配置管理工具，它拥有基于CLI（命令行界面）和基于GUI（图形用户界面）的两种管理方式。</p>
+
+<p><code class="highlighter-rouge">firewalld</code>提供了<strong>区域</strong>的概念。</p>
+<blockquote>
+  <p>区域就是firewalld预先准备了几套防火墙策略集合（策略模板），用户可以根据生产场景的不同而选择合适的策略集合，从而实现防火墙策略之间的快速切换。</p>
+</blockquote>
+
+<h4 id="终端管理工具">终端管理工具</h4>
+<p>命令格式：<code class="highlighter-rouge">firewall-cmd + 参数</code> 支持Tab补齐
+<img src="https://i.loli.net/2019/08/03/Ksfakc21ZoXmpSl.png" alt="" /></p>
+
+<p>与其他防火墙策略工具一样，<code class="highlighter-rouge">firewalld</code>策略默认为<code class="highlighter-rouge">Runntime</code>模式（当前模式），另外一种就是<code class="highlighter-rouge">Permanent</code>模式（永久模式）</p>
+
+<p>开始永久模式的方法：设置防火墙策略是添加 <code class="highlighter-rouge">--premanent</code> 参数。之后还需要手动执行 <code class="highlighter-rouge">firewall-cmd --reload</code> 使其生效</p>
+
+<p>详见👉 <a href="https://www.linuxprobe.com/chapter-08.html#831"><code class="highlighter-rouge">firewall</code>使用</a></p>
+
+<p>firewalld中的富规则表示更细致、更详细的防火墙策略配置，它可以针对系统服务、端口号、源地址和目标地址等诸多信息进行更有针对性的策略配置。它的优先级在所有的防火墙策略中也是最高的。比如，我们可以在firewalld服务中配置一条富规则，使其拒绝192.168.10.0/24网段的所有用户访问本机的ssh服务（22端口）：</p>
+
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="o">[</span>root@linuxprobe ~]# firewall-cmd <span class="nt">--permanent</span> <span class="nt">--zone</span><span class="o">=</span>public <span class="nt">--add-rich-rule</span><span class="o">=</span><span class="s2">"rule family="</span>ipv4<span class="s2">" source address="</span>192.168.10.0/24<span class="s2">" service name="</span>ssh<span class="s2">" reject"</span>
+success
+<span class="o">[</span>root@linuxprobe ~]# firewall-cmd <span class="nt">--reload</span>
+success
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h4 id="图形管理工具">图形管理工具</h4>
+<p>命令：<code class="highlighter-rouge">firewall-config</code> 进行图形化管理工具
+详见👉 <a href="https://www.linuxprobe.com/chapter-08.html#832">firewall图形化管理工具使用</a></p>
+
+<h2 id="服务的访问控制列表">服务的访问控制列表</h2>
+<blockquote>
+  <p>TCP Wrappers是RHEL 7系统中默认启用的一款流量监控程序，它能够根据来访主机的地址与本机的目标服务程序作出允许或拒绝的操作。</p>
+</blockquote>
+
+<p>可以理解为 <strong>Linux有两个层面的防火墙，第一种是外层的，对TCp/Ip协议的流量进行过滤，<code class="highlighter-rouge">Tcp Wrapper</code>服务是对Linux防火墙进行控制</strong></p>
+
+<p><code class="highlighter-rouge">Tcp Wrapper</code> 由两个文件构成：</p>
+<ol>
+  <li>系统首先检查 <strong>控制列表文件</strong>（天使文件）<code class="highlighter-rouge">/etc/hosts.alow</code>，遇到匹配项就去放行该流量。</li>
+  <li>没有的话去检查 <strong>拒绝控制列表文件</strong>（恶魔文件）<code class="highlighter-rouge">/etc/hosts.deny</code>，遇到匹配项就拒绝掉该流量。</li>
+  <li>如果两种都没有，系统默认放行流量</li>
+</ol>
+
+<p><strong>注意</strong>：</p>
+<ul>
+  <li>编写拒绝策略规则时，填写的是<strong>服务名称</strong>，而非协议名称</li>
+  <li>不需重启即可生效</li>
+</ul>
+
+<h2 id="图片笔记">图片笔记</h2>
+<p><img src="https://i.loli.net/2019/08/03/2XrB3TRQIMtEoys.jpg" alt="" />
+<img src="https://i.loli.net/2019/08/03/ewkxP7g8Rp4vUNA.jpg" alt="" />
+<img src="https://i.loli.net/2019/08/03/WL2wpFnEb18TaSx.jpg" alt="" />
+<img src="https://i.loli.net/2019/08/03/3oZUzcqxADYBgfv.jpg" alt="" /></p>
+
+:ET

@@ -1,0 +1,122 @@
+I"�<h1 id="arts第一周">ARTS第一周</h1>
+
+<hr />
+
+<h2 id="algorithm">Algorithm</h2>
+
+<h4 id="insertbefore">insertBefore()：</h4>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+</pre></td><td class="rouge-code"><pre>insertBefore(Posi p,T const &amp; e)
+{
+	_size++;//大小加一
+	return p-&gt;insertPred(e);
+}
+
+insertPred(T const &amp; e)
+{
+	/*
+	* @Param e为要插入的节点，pred为前驱，this为后续，即p
+	*/
+	Posi(T) x = new ListNode(e, pred, this);
+	
+	pred-&gt;succ = x;//设置正向连接
+	this-&gt;pred  = x;
+	return x;//返回节点位置
+}
+
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g1ufvdlhhzj30e804hdg5.jpg" alt="" /></p>
+
+<hr />
+
+<h2 id="review">Review</h2>
+
+<p>。。忘了</p>
+
+<hr />
+
+<h2 id="tips">Tips</h2>
+
+<p>开始部署线上服务器，开启了新世界的大门。。</p>
+
+<hr />
+
+<h2 id="share">Share</h2>
+
+<p><strong>自制力</strong></p>
+
+<p>自制力真的是非常重要了，每天早上起床之后就给自己规划好一整天：</p>
+
+<p>早上学习x个小时，下午学习x个小时。。</p>
+
+<p>一是自己总是管不住自己，手机在旁总想刷微博，看动态。记得去年不是这样的啊，可能一直在宿舍学习不在实验室的原因吧？</p>
+
+<p>二是格格前两天发给我的一篇知乎的文章：<code class="highlighter-rouge">要看有效时间</code>！ 学习不在于你在那里做了多久，而是你认真学了多久！</p>
+
+<p><strong>侧重点</strong></p>
+
+<p>自己总是想去学习各种各样的技术，却一直意识不到现在的水平是真的低。</p>
+
+<p>塌下心来，一步一步来！<code class="highlighter-rouge">只用想着现阶段的目标</code>就好！</p>
+
+<p>自己的本学期学习路线：</p>
+
+<ul>
+  <li>传智Java视频看完</li>
+  <li>数据结构学完</li>
+  <li>有多余精力的话学习Laravel和Vue</li>
+</ul>
+
+<p><code class="highlighter-rouge">一步一步来！不要着急</code></p>
+
+<p><strong>难易度</strong></p>
+
+<p>可能是自己水平太菜的原因，暂未涉及到此类问题</p>
+
+<p>文章来源：<a href="https://mp.weixin.qq.com/s?__biz=MzI3ODg2OTY1OQ==&amp;mid=2247485418&amp;idx=1&amp;sn=6f13635e9442eb7034ed41592090305d&amp;chksm=eb51241edc26ad08b393225fa96fdcbe64a91d86b9c7960a2424121e573d3b8a1c12d3ae6019&amp;mpshare=1&amp;scene=23&amp;srcid=#rd" title="三年编码的自我反省">三年编码的自我反省</a></p>
+
+<hr />
+
+<h2 id="resourese">Resourese</h2>
+<ul>
+  <li><a href="http://how2j.cn/">How2j</a></li>
+  <li><a href="https://snailclimb.gitee.io/javaguide/#/">Java学习指南</a></li>
+  <li>Java知识图谱（见文末）</li>
+</ul>
+
+<h2 id="tec">Tec</h2>
+<p>新技术好像是没学到什么，一直在复习Java</p>
+
+<p>之前吃的太快了要慢慢消化 ：(</p>
+
+<hr />
+
+<h2 id="diff">Diff</h2>
+<p>服务器</p>
+
+<hr />
+
+<h2 id="life">Life</h2>
+
+<p>与格格度过了一个难忘的清明假期，爱情的味道越来越甜了呢~</p>
+
+<p><img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g1ugw8d1uaj30jh4j4ak4.jpg" alt="Java知识图谱" /></p>
+:ET

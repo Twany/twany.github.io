@@ -1,0 +1,212 @@
+I"�<blockquote>
+  <p>Linux 是一个多用户、多任务的操作系统。
+所以，对权限很“讲究”</p>
+</blockquote>
+
+<h2 id="用户身份">用户身份</h2>
+<p><img src="https://i.loli.net/2019/07/15/5d2c1e2bb84e068227.png" alt="" /></p>
+
+<h4 id="命令">命令</h4>
+<ul>
+  <li>useradd   创建用户（会创建一个同名的基本用户组）
+<img src="https://i.loli.net/2019/07/15/5d2c1e7f0714882415.png" alt="" /></li>
+  <li>groupadd  创建用户组（组分为<strong>基本组</strong>和<strong>扩展组</strong>，前者只有一个，后者为多个）</li>
+  <li>usermod   修改用户属性
+<img src="https://i.loli.net/2019/07/15/5d2c1f1e5943c26131.png" alt="" /></li>
+  <li>id 用户   查看用户信息</li>
+  <li>passwd    修改密码等信息</li>
+  <li>userdel   删除用户
+    <ul>
+      <li>-r      同时删除用户及对应家目录</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="文件权限">文件权限</h2>
+<h4 id="文件类型">文件类型</h4>
+<p>命令 | 作用</p>
+<ul>
+  <li>
+    <table>
+      <tbody>
+        <tr>
+          <td>d</td>
+          <td>目录文件</td>
+        </tr>
+        <tr>
+          <td>l</td>
+          <td>链接文件</td>
+        </tr>
+        <tr>
+          <td>b</td>
+          <td>块设备文件</td>
+        </tr>
+        <tr>
+          <td>c</td>
+          <td>字符设备文件</td>
+        </tr>
+        <tr>
+          <td>p</td>
+          <td>管道文件</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<h4 id="权限分配">权限分配</h4>
+<p><img src="https://i.loli.net/2019/07/15/5d2c20785c3ce62288.png" alt="" />
+<img src="https://i.loli.net/2019/07/15/5d2c208b78a4767239.png" alt="" /></p>
+
+<ul>
+  <li>对于文件
+    <ul>
+      <li>r 读取文件权限</li>
+      <li>w 修改文件权限</li>
+      <li>x 执行文件权限</li>
+    </ul>
+  </li>
+  <li>对于目录
+    <ul>
+      <li>r 读取目录文件列表权限</li>
+      <li>w 对目录内文件编辑</li>
+      <li>x 进入一个目录的权限</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="文件的特殊权限">文件的特殊权限</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre>chmod 权限 + 文件   =》 修改文件权限
+chmod 属性          =》 修改所属组
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>一般我们会经常遇到无法通过单纯的设置权限来解决问题，因为有了以下三种<strong>特殊权限位</strong>（注意，它们是<strong>位</strong>，也就是通过更改9位权限来作用）</p>
+<ul>
+  <li>SUID
+    <ul>
+      <li>类比尚方宝剑，作用是让非管理员用户暂时拥有管理员的权利。所以，它应该是通过更改“文件所有者”的权限来作用</li>
+      <li><code class="highlighter-rouge">chmod u+s 文件名</code></li>
+      <li><code class="highlighter-rouge">rwx</code> -&gt; <code class="highlighter-rouge">rws</code></li>
+      <li><code class="highlighter-rouge">rw-</code> -&gt; <code class="highlighter-rouge">rwS</code></li>
+    </ul>
+  </li>
+  <li>SGID
+    <ul>
+      <li>让执行者暂时拥有属组的权限</li>
+      <li><code class="highlighter-rouge">chmod -R g+s 文件名</code></li>
+      <li><code class="highlighter-rouge">rwx</code> -&gt; <code class="highlighter-rouge">rws</code></li>
+      <li><code class="highlighter-rouge">rw-</code> -&gt; <code class="highlighter-rouge">rwS</code></li>
+      <li>设计类似于SUID，但不同的是更改的是属组</li>
+    </ul>
+  </li>
+  <li>SBIT
+    <ul>
+      <li>“粘滞位”，可理解为“保护位”。即确保用户只能删除自己的文件，而不能删除其他用户的文件</li>
+      <li><code class="highlighter-rouge">chmod -R o+t 目录名</code></li>
+      <li><code class="highlighter-rouge">rwx</code> -&gt; <code class="highlighter-rouge">rwt</code></li>
+      <li><code class="highlighter-rouge">rw-</code> -&gt; <code class="highlighter-rouge">rwT</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>例：求<code class="highlighter-rouge">rwSr-s-wT</code>的权限数字表达式</p>
+
+<p>解：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+</pre></td><td class="rouge-code"><pre>原式：  rwSr-s-wT
+化简：  rwS / r-s / -wT
+还原：  rw- / r-x / -w-
+数字：   6  /  5  /  2
+特殊权限 4     2     0 (SUID为4，SGID为2，SBIT为1)
+得：   7 6 5 2
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<hr />
+
+<h2 id="文件的隐藏属性">文件的隐藏属性</h2>
+<p>权限分三种: 一般权限、特殊权限、隐藏权限</p>
+
+<p>隐藏权限不同于另两种，个人理解为一种额外的扩展的权限。</p>
+
+<p>格式：</p>
+<ul>
+  <li><code class="highlighter-rouge">chattr 参数 文件</code>    “ + “ 为增加，” - “为移除
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+</pre></td><td class="rouge-code"><pre><span class="nb">touch </span>test.txt  //创建test.txt文件
+chattr +a test.txt  //增加隐藏属性
+<span class="nb">rm </span>test.txt     //若删除，删除失败
+chattr <span class="nt">-a</span> test.txt  //移除
+<span class="nb">rm </span>test.txt     、、删除成功
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">lsattr 参数 文件</code>    查看隐藏权限
+<img src="https://i.loli.net/2019/07/15/5d2c4efa8798161359.png" alt="" /></li>
+</ul>
+
+<hr />
+
+<h2 id="文件访问列表acl">文件访问列表（ACL）</h2>
+<p>上述三种权限都有一个特性————“权限是针对某一<em>*类</em>成员”</p>
+
+<p>所以，我们希望对某一个成员权限进行设置</p>
+
+<ul>
+  <li><code class="highlighter-rouge">setfacl 参数 用户 文件</code> 设置ACL
+    <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+</pre></td><td class="rouge-code"><pre><span class="o">&gt;</span>setfacl <span class="nt">-Rm</span> u:linuxprobe:rwx /root //setfacl 参数 用户：用户名：权限 文件
+//此时linuxprobe这个用户就拥有查看/root文件的权限了
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+  <li><code class="highlighter-rouge">getfacl /root</code> 查看ACL</li>
+</ul>
+
+<p>参数 | 作用</p>
+<ul>
+  <li>| -
+-R | 针对目录文件
+-m | 针对普通文件
+-b | 删除ACL
+u   | 用户
+g   | 组
+一般情况下都要加上 <code class="highlighter-rouge">m</code> ，如上面的例子</li>
+</ul>
+
+<hr />
+
+<h2 id="su和sudo">su和sudo</h2>
+<ul>
+  <li><code class="highlighter-rouge">su</code> 是用来切换用户，我们使用 <code class="highlighter-rouge">su - linuxroot</code></li>
+  <li><code class="highlighter-rouge">sudo</code> 作用是把特定命令的执行权限赋予给指定用户</li>
+  <li><code class="highlighter-rouge">visudo</code> 配置用户权限（只有root用户有权限使用）
+    <ul>
+      <li>在99行，添加：<code class="highlighter-rouge">linuxprobe ALL=(ALL) ALL</code></li>
+      <li><code class="highlighter-rouge">linuxprobe ALL=NOPASSWD :usr/sbin/poweroff</code> 执行关机命令不用再输入密码</li>
+    </ul>
+  </li>
+</ul>
+
+<hr />
+
+<h2 id="图片笔记">图片笔记</h2>
+<p><img src="https://i.loli.net/2019/07/15/5d2c5e759fdf685714.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/15/5d2c5e7687f0129565.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/15/5d2c5e77a11d570890.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/15/5d2c5e78dcd6d47350.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/15/5d2c5e79c880916854.jpg" alt="" /></p>
+:ET

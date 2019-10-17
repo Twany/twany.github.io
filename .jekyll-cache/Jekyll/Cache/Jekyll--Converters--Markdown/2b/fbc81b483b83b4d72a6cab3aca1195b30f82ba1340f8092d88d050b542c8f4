@@ -1,0 +1,8 @@
+I"k<h2 id="网站服务程序">网站服务程序</h2>
+<h4 id="一个简单的实例">一个简单的实例</h4>
+<ol>
+  <li>挂载镜像，使用Yum下载 httpd <code class="highlighter-rouge">yum install httpd</code></li>
+  <li>启用<code class="highlighter-rouge">httpd</code>服务程序并添加到开机项   <code class="highlighter-rouge">systemctl start httpd</code> <code class="highlighter-rouge">systemctl enable httpd</code></li>
+  <li>测试：打开浏览器，输入<code class="highlighter-rouge">127.0.0.1</code>即可看到（文件路径：<code class="highlighter-rouge">/var/www</code>）</li>
+</ol>
+:ET

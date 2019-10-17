@@ -1,0 +1,104 @@
+I"�<h1 id="一个很恶心的数据库连接问题">一个很恶心的数据库连接问题</h1>
+
+<hr />
+
+<p>今天下午，打开电脑。照常的打开了php工具箱，结果，出现了惊喜：
+<img class="shadow" src="/img/in-post/mysql-mess/phpStudy.png" width="260" /></p>
+
+<h2 id="开始查错">开始查错：</h2>
+<hr />
+
+<h3 id="1打开adminer">1.打开Adminer</h3>
+<p><img class="shadow" src="/img/in-post/mysql-mess/adminer.png" /></p>
+
+<h4 id="解决下载chorme的charset插件">解决：==下载Chorme的charset插件==</h4>
+
+<h4 id="结果依旧无法更改编码">结果：<strong>依旧无法更改编码</strong></h4>
+<hr />
+
+<h3 id="2打开phpmyadmin">2.打开phpMyAdmin</h3>
+<p><img class="shadow" src="/img/in-post/mysql-mess/phpMyAdmin.png" /></p>
+
+<h4 id="解决-百度错误代码2002">解决： ==百度错误代码#2002==</h4>
+
+<p>修改phpMyAdmin/libraries”文件夹下的config.default.php文件内的</p>
+
+<p><code class="highlighter-rouge">$cfg['Servers'][$i]['host'] = 'localhost';·</code></p>
+
+<p>改为</p>
+
+<p><code class="highlighter-rouge"> $cfg['Servers'][$i]['host'] =‘127.0.0.1’';</code></p>
+
+<h4 id="结果无效">结果：<strong>无效</strong></h4>
+
+<hr />
+<h3 id="3打开navicat-for-mysql">3.打开Navicat for mysql</h3>
+<p><img class="shadow" src="/img/in-post/mysql-mess/navicat.png" /></p>
+
+<h4 id="解决-百度错误代码10038">解决： ==百度错误代码10038==</h4>
+<p>Windows安全规则增加了一个3306新端口</p>
+
+<h4 id="结果无效-1">结果：<strong>无效</strong></h4>
+
+<hr />
+
+<blockquote>
+  <p>于是，打开cmd，试图通过命令行连接数据库</p>
+</blockquote>
+
+<h3 id="操作过程">操作过程：</h3>
+
+<h4 id="1-进入到mysql下的bin文件夹">1. 进入到mysql下的bin文件夹</h4>
+<p><code class="highlighter-rouge">cd F:\myphp_www\PHPTutorial\MySQL\bin</code></p>
+
+<p>此时遇到了一个小坑—路径不提示更改！
+<img class="shadow" src="/img/in-post/mysql-mess/cmd.png" /></p>
+
+<p>继续百度：
+输入 <code class="highlighter-rouge">F:</code> ok了！</p>
+
+<h4 id="2连接数据库">2.连接数据库</h4>
+<p><code class="highlighter-rouge">mysql.exe -h 127.0.1 -u root -p</code></p>
+
+<p>根据提示：输入数据库密码root</p>
+
+<p>提示：</p>
+
+<p><code class="highlighter-rouge">
+190219 17:52:12 [Note] --secure-file-priv is set to NULL. Operations related to importing and exporting data are disabled
+190219 17:52:12 [Note] mysqld.exe (mysqld 5.5.53) starting as process 9408 ...
+</code></p>
+
+<p>ok,又提取到一个错误代码：百度：<code class="highlighter-rouge">mysqld.exe (mysqld 5.5.53) starting as process 9408</code>
+出现了：
+<img class="shadow" src="/img/in-post/mysql-mess/solve.png" /></p>
+
+<h2 id="大功告成">大功告成！</h2>
+
+<p>我的理解是自己之前不小心更改了系统的某个设置，使服务器指向错误。</p>
+
+<p>然后去百度<code class="highlighter-rouge">bind-address=127.0.0.1</code>作用为使本地访问</p>
+
+<p>如果把项目拿到线上，则应该把这个注释掉，使不再只允许本地访问，外网可以访问。</p>
+
+<p>感谢<a href="https://www.cnblogs.com/jecyhw/p/3512504.html">jecz</a></p>
+
+<h2 id="总结">总结：</h2>
+<p>一直以来，每当遇到层级比较浅的问题，是可以通过时间去解决的。而如果遇到一些底层的问题，就真的是望洋兴叹了。当接触的越多，越发的发掘底层基础的重要性，不说了，去学离散了~~~</p>
+
+<h2 id="小甜点">小甜点</h2>
+<h4 id="1-markdown支持html">1. Markdown支持HTML</h4>
+
+<p>以导入图片为例子</p>
+
+<p><img class="shadow" src="/img/in-post/mysql-mess/img.png" /></p>
+
+<p>则会产生本篇博文banner图,方便之处在于可以随便调整样式</p>
+
+<h4 id="2-一个markdown编辑器和图床">2. 一个Markdown编辑器和图床</h4>
+
+<p><a href="https://ch957869975.github.io/md-editor/dist/">Markdown编辑器</a></p>
+
+<p>里面的上传图片可以当做图床用，看样子是新浪的，应该很稳定。</p>
+
+:ET

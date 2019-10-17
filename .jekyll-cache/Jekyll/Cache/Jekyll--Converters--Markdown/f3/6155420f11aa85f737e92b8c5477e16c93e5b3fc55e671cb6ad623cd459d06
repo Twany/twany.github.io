@@ -1,0 +1,80 @@
+I"#<blockquote>
+  <p>原来自己也大概接触过Linux，只不过还停留在极其初级的阶段。2019年7月6日，报名了刘遄老师的《Linux就该这么学》培训班，20天的提升开始了。</p>
+</blockquote>
+
+<h1 id="0咱们先来谈谈学习方法和红帽系统">0.咱们先来谈谈学习方法和红帽系统</h1>
+
+<h2 id="开源共享精神">开源共享精神</h2>
+
+<blockquote>
+  <p>开源软件的特点就是把软件程序与源代码文件一起打包提供给用户，让用户在不受限制地使用某个软件功能的基础上还可以按需进行修改，或编制成衍生产品再发布出去。用户具有使用自由、修改自由、重新发布自由以及创建衍生品的自由。</p>
+</blockquote>
+
+<p>特点：</p>
+<ul>
+  <li>低风险</li>
+  <li>高品质</li>
+  <li>低成本</li>
+  <li>更透明</li>
+</ul>
+
+<p>开源并非“绝对自由”，它也具有一定协议，来保证开源工作者的权益。主要分为以下几类：</p>
+
+<ul>
+  <li>GNU GPL（GNU General Public License，GNU通用公共许可证）
+<img src="https://i.loli.net/2019/07/06/5d20617fe33c451563.png" alt="" /></li>
+  <li>BSD（Berkeley Software Distribution，伯克利软件发布版）许可协议
+<img src="https://i.loli.net/2019/07/06/5d2061fe3714489683.png" alt="" /></li>
+  <li>Apache许可证版本（Apache License Version）许可协议
+<img src="https://i.loli.net/2019/07/06/5d2062496ae3323002.png" alt="" /></li>
+  <li>
+    <p>MPL（Mozilla Public License，Mozilla公共许可）许可协议</p>
+
+    <p>相较于GPL许可协议，MPL更加注重对开发者的源代码需求和收益之间的平衡。</p>
+  </li>
+  <li>MIT（Massachusetts Institute of Technology）许可协议</li>
+</ul>
+
+<p>目前限制最少的开源许可协议之一，只要程序的开发者在修改后的源代码中保留原作者的许可信息即可，因此普遍被商业软件所使用。</p>
+
+<h2 id="为什么学习linux系统">为什么学习Linux系统</h2>
+
+<h4 id="开源">开源</h4>
+<p>用户可自主更改设置</p>
+
+<h4 id="安全与稳定">安全与稳定</h4>
+<p>Linux继承了Unix的稳定性，告别Windows蓝屏情况。在长期稳定运行的网站服务器上、在处理大数据的集群系统中以及需要协同工作的环境Linux系统为最佳选择。
+<img src="https://i.loli.net/2019/07/06/5d206501727b065022.png" alt="Linux系统相较于Windows系统的具体优势" /></p>
+
+<h2 id="常见的linux系统版本">常见的Linux系统版本</h2>
+<p><img src="https://i.loli.net/2019/07/06/5d20675eaac5097345.png" alt="" />
+<img src="https://i.loli.net/2019/07/06/5d2067795a20241899.png" alt="" />
+<img src="https://i.loli.net/2019/07/06/5d20679a9cbb725518.png" alt="" /></p>
+
+<h4 id="centos和rhel7">CentOS和RHEL7</h4>
+
+<p>CentOS可以理解为RHCE7的精简版：</p>
+<blockquote>
+  <p>CentOS系统是通过把RHEL系统释放出的程序源代码经过二次编译之后生成的一种Linux系统，其命令操作和服务配置方法与RHEL完全相同，但是去掉了很多收费的服务套件功能，而且还不提供任何形式的技术支持，出现问题后只能由运维人员自己解决。</p>
+</blockquote>
+
+<p><strong>我们所学的书便是根据RHEL 7 所编写</strong></p>
+
+<h2 id="红帽认证">红帽认证</h2>
+<p>因暂不考虑认证，此处不提。</p>
+
+<p>详细可见 <a href="https://www.linuxprobe.com/chapter-00.html">了解红帽认证</a></p>
+
+<h2 id="总结">总结</h2>
+
+<p>第一日还算不错，了解了Linux的历史和概况</p>
+
+<p>Keep on！</p>
+
+<hr />
+
+<h2 id="图片笔记">图片笔记</h2>
+<p><img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4uiuec64kj33402c0qv8.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4uiup9mq6j33402c0qv9.jpg" alt="" />
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g4uiuv1m4aj33402c0qv9.jpg" alt="" /></p>
+:ET

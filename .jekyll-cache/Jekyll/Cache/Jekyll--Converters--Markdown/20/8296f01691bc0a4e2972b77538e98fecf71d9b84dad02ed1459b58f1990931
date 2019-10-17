@@ -1,0 +1,169 @@
+I"4<h2 id="最大元和最小元">最大元和最小元</h2>
+<h5 id="求数组arr的最大元和最小元">求数组<code class="highlighter-rouge">arr</code>的最大元和最小元</h5>
+<p>如果用普通方法来解的话，是要先创建哨兵，然后依次与哨兵比较，冒泡法得出。</p>
+
+<p>最大值和最小值均如此，复杂度为<code class="highlighter-rouge">o(2n-2)</code></p>
+
+<p><strong>更为简易的方法：</strong></p>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+</pre></td><td class="rouge-code"><pre><span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="o">){</span>  <span class="c1">//当 n 为偶数</span>
+    <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+    <span class="kt">int</span> <span class="n">max</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">1</span><span class="o">];</span>
+<span class="o">}</span><span class="k">else</span><span class="o">{</span>  <span class="c1">//为奇数</span>
+    <span class="kt">int</span> <span class="n">min</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+    <span class="kt">int</span> <span class="n">max</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="mi">0</span><span class="o">];</span>
+<span class="o">}</span>
+
+<span class="k">if</span><span class="o">(</span> <span class="n">x</span><span class="o">&lt;</span><span class="n">y</span> <span class="o">){</span>  <span class="c1">//一次取出两个元素，当 x 比较小的时候</span>
+    <span class="n">min</span> <span class="o">=</span> <span class="n">x</span><span class="o">&lt;</span><span class="n">min</span> <span class="o">?</span> <span class="n">x</span> <span class="o">:</span> <span class="n">min</span><span class="o">;</span>
+    <span class="n">max</span> <span class="o">=</span> <span class="n">y</span><span class="o">&lt;</span><span class="n">max</span> <span class="o">?</span> <span class="n">max</span> <span class="o">:</span> <span class="n">y</span><span class="o">;</span>
+<span class="o">}</span><span class="k">else</span><span class="o">{</span>  <span class="c1">//y 比较小</span>
+    <span class="n">min</span> <span class="o">=</span> <span class="n">y</span><span class="o">&lt;</span><span class="n">min</span> <span class="o">?</span> <span class="n">y</span> <span class="o">:</span> <span class="n">min</span><span class="o">;</span>
+    <span class="n">max</span> <span class="o">=</span> <span class="n">y</span><span class="o">&lt;</span><span class="n">max</span> <span class="o">?</span> <span class="n">max</span> <span class="o">:</span> <span class="n">y</span><span class="o">;</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>上述代码，我们进行了<code class="highlighter-rouge">n/2</code>组的比较，每组比较比较了3次，所以复杂度为 <code class="highlighter-rouge">o(3*n/2)</code></p>
+
+<h2 id="期望线性时间的选择算法">期望线性时间的选择算法</h2>
+<h5 id="问题存在数组arr求数组中第k小的元素">问题：存在数组<code class="highlighter-rouge">arr</code>，求数组中第<code class="highlighter-rouge">K</code>小的元素</h5>
+<h4 id="思路">思路</h4>
+<p><strong>我们利用快速排序的方法</strong></p>
+<ul>
+  <li>在第一次排序中，选择好划分点<code class="highlighter-rouge">n</code>
+<img src="https://i.loli.net/2019/07/28/5d3d90eb58cda33978.png" alt="" />
+如图，n 为划分点，我们已知n左侧x个元素均小于等于n，右侧大于n</li>
+  <li>那么，我们可知，n是第<code class="highlighter-rouge">x+1</code>最小的元素</li>
+  <li>将<code class="highlighter-rouge">n+1</code>和<code class="highlighter-rouge">K</code>进行比较
+    <ul>
+      <li><code class="highlighter-rouge">n+1 == K</code>，则<code class="highlighter-rouge">n+1</code>就是要找的元素。</li>
+      <li><code class="highlighter-rouge">n+1 &lt; K</code>，说明第K小元素在右侧，继续递归右侧序列</li>
+      <li><code class="highlighter-rouge">n+1 &gt; K</code>，说明第K小元素在左侧，继续递归左侧序列</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="代码实现">代码实现</h4>
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+</pre></td><td class="rouge-code"><pre><span class="kn">import</span> <span class="nn">java.util.Arrays</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">static</span> <span class="n">java</span><span class="o">.</span><span class="na">util</span><span class="o">.</span><span class="na">Arrays</span><span class="o">.*;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Test</span> <span class="o">{</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span>  <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="o">{</span><span class="mi">4</span><span class="o">,</span><span class="mi">9</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="mi">11</span><span class="o">,</span><span class="mi">6</span><span class="o">,</span><span class="mi">32</span><span class="o">,</span><span class="mi">49</span><span class="o">,</span><span class="mi">21</span><span class="o">,</span><span class="mi">7</span><span class="o">,</span><span class="mi">8</span><span class="o">,</span><span class="mi">6</span><span class="o">,</span><span class="mi">9</span><span class="o">,</span><span class="mi">2</span><span class="o">};</span>    <span class="c1">//[2, 4, 5, 6, 6, 7, 8, 9, 9, 11, 21, 32, 49]</span>
+        <span class="kt">int</span> <span class="n">end</span> <span class="o">=</span> <span class="n">search</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span><span class="mi">6</span><span class="o">);</span>
+        <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">end</span><span class="o">]);</span>   <span class="c1">// 7</span>
+
+    <span class="o">}</span>
+
+    <span class="c1">//划分方法</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">partition</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span> <span class="kt">int</span> <span class="n">leftIndex</span><span class="o">,</span> <span class="kt">int</span> <span class="n">rightIndex</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kt">int</span> <span class="n">pivot</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">leftIndex</span><span class="o">];</span>
+
+        <span class="k">while</span> <span class="o">(</span><span class="n">leftIndex</span> <span class="o">&lt;</span> <span class="n">rightIndex</span><span class="o">){</span>
+            <span class="k">while</span> <span class="o">(</span><span class="n">leftIndex</span><span class="o">&lt;</span><span class="n">rightIndex</span> <span class="o">&amp;&amp;</span> <span class="n">arr</span><span class="o">[</span><span class="n">rightIndex</span><span class="o">]</span> <span class="o">&gt;</span> <span class="n">pivot</span><span class="o">)</span>
+                <span class="n">rightIndex</span><span class="o">--;</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">leftIndex</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">rightIndex</span><span class="o">];</span>
+
+            <span class="k">while</span> <span class="o">(</span><span class="n">leftIndex</span><span class="o">&lt;</span><span class="n">rightIndex</span> <span class="o">&amp;&amp;</span> <span class="n">arr</span><span class="o">[</span><span class="n">leftIndex</span><span class="o">]</span> <span class="o">&lt;=</span> <span class="n">pivot</span><span class="o">)</span>
+                <span class="n">leftIndex</span><span class="o">++;</span>
+            <span class="n">arr</span><span class="o">[</span><span class="n">rightIndex</span><span class="o">]</span> <span class="o">=</span> <span class="n">arr</span><span class="o">[</span><span class="n">leftIndex</span><span class="o">];</span>
+        <span class="o">}</span>
+        <span class="n">arr</span><span class="o">[</span><span class="n">leftIndex</span><span class="o">]</span> <span class="o">=</span> <span class="n">pivot</span><span class="o">;</span>
+
+        <span class="k">return</span> <span class="n">leftIndex</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kt">int</span> <span class="nf">search</span><span class="o">(</span><span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span><span class="o">,</span><span class="kt">int</span> <span class="n">k</span><span class="o">){</span>
+        <span class="kt">int</span> <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">right</span> <span class="o">=</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+
+        <span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">partition</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span><span class="n">left</span><span class="o">,</span><span class="n">right</span><span class="o">);</span>
+
+        <span class="k">while</span><span class="o">(</span> <span class="n">index</span><span class="o">+</span><span class="mi">1</span> <span class="o">!=</span> <span class="n">k</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">index</span><span class="o">+</span><span class="mi">1</span> <span class="o">&lt;</span> <span class="n">k</span><span class="o">)</span> <span class="c1">//位于右侧</span>
+                <span class="n">left</span> <span class="o">=</span> <span class="n">index</span><span class="o">+</span><span class="mi">1</span><span class="o">;</span>
+            <span class="k">else</span>    <span class="c1">//位于左侧</span>
+                <span class="n">right</span> <span class="o">=</span> <span class="n">index</span><span class="o">-</span><span class="mi">1</span><span class="o">;</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">partition</span><span class="o">(</span><span class="n">arr</span><span class="o">,</span> <span class="n">left</span><span class="o">,</span> <span class="n">right</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">index</span><span class="o">;</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h5 id="注意">注意:</h5>
+<ul>
+  <li>我们此处用到的<code class="highlighter-rouge">partition</code>方法和快速排序章节的<code class="highlighter-rouge">partition</code>方法实现略有不同，此处是通过覆盖不符合条件的元素，而不是交换。
+    <ul>
+      <li>示意图：<img src="https://i.loli.net/2019/08/02/5d4405e535cca97260.png" alt="" /></li>
+    </ul>
+  </li>
+  <li>我们并不用给数组 <code class="highlighter-rouge">arr</code> 完全排序，只需要让其满足枢纽元左右侧大小关系即可。</li>
+</ul>
+
+<p>参考链接：<a href="https://blog.csdn.net/qq_35503380/article/details/82528241">快速找出数组中前k小的元素</a></p>
+
+<h2 id="笔记">笔记</h2>
+<p><img src="https://i.loli.net/2019/08/02/5d4423f05198140259.jpg" alt="" />
+<img src="https://i.loli.net/2019/08/02/5d4423f0c934d85491.jpg" alt="" /></p>
+:ET

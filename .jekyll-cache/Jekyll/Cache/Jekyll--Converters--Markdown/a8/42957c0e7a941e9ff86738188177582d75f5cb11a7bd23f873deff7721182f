@@ -1,0 +1,10 @@
+I",<h2 id="配置网络服务">配置网络服务</h2>
+<h4 id="配置网络参数">配置网络参数</h4>
+<p>配置网络服务有4种方式：</p>
+<ul>
+  <li>编辑服务 <code class="highlighter-rouge">vim /etc/sysconfig/network-scripts/ifcfg-enoxxxxxxxx</code> （其中xxxxx可通过<code class="highlighter-rouge">ifconfig</code>命令得到）</li>
+  <li>图形化设置：<code class="highlighter-rouge">nmtui</code></li>
+  <li>图形化设置：<code class="highlighter-rouge">nm-connection-editro</code></li>
+  <li>RHEL 7 右上角设置</li>
+</ul>
+:ET

@@ -1,0 +1,104 @@
+I"o<h5 id="之前使用swoole-和workman因水平有限并为实现需求经过一番百度之后发现了基于workerman的-gatewayworker以下为-gatewayworker-的简介">之前使用swoole 和workman，因水平有限，并为实现需求。经过一番百度之后，发现了基于workerman的 GatewayWorker，以下为 GatewayWorker 的简介：</h5>
+<blockquote>
+  <p>GatewayWorker基于Workerman开发的一个项目框架，用于快速开发TCP长连接应用，例如app推送服务端、即时IM服务端、游戏服务端、物联网、智能家居等等</p>
+</blockquote>
+
+<p>详细可查看 <a href="https://www.workerman.net/doc">GatewayWorker 官网</a></p>
+
+<h2 id="需求分析">需求分析</h2>
+<p><img src="https://i.loli.net/2019/07/22/5d358ffba00ef70244.png" alt="" />
+如图，需要做到：</p>
+<ul>
+  <li>硬件可以给服务器发送数据</li>
+  <li>微信小程序控制硬件</li>
+</ul>
+
+<p>较容易实现的是第一个，直接使用tcp就可以。但是第二个问题呢？微信小程序如何连接到指定硬件设备</p>
+
+<h2 id="解决方案">解决方案</h2>
+<h5 id="从gatewayworker官网下载一个简易的聊天室demo使用了tcp协议功能是多个telnet可进行聊天消息实时共享我们在此基础上改进">从GatewayWorker官网下载一个简易的聊天室Demo，使用了tcp协议，功能是多个telnet可进行聊天，消息实时共享。我们在此基础上改进。</h5>
+<h4 id="目录结构">目录结构</h4>
+<p>把YourAPP复制一份，并命名为<code class="highlighter-rouge">WSServer</code>
+<img src="https://i.loli.net/2019/07/22/5d359e976eec692157.png" alt="" /></p>
+
+<h4 id="yourapp-文件夹"><code class="highlighter-rouge">YourApp</code> 文件夹</h4>
+<p>在<code class="highlighter-rouge">YourApp</code>中，也就是<code class="highlighter-rouge">TcpServer</code>,Tcp端口使用<code class="highlighter-rouge">8282</code>，服务注册端口为<code class="highlighter-rouge">1238</code></p>
+
+<p>Gateway类型为tcp:</p>
+
+<p><code class="highlighter-rouge">$gateway = new Gateway("tcp://0.0.0.0:8282");</code></p>
+
+<h4 id="wsserver文件夹"><code class="highlighter-rouge">WSServer</code>文件夹</h4>
+<p>在<code class="highlighter-rouge">WSServer</code>文件夹中，WebSocket端口使用<code class="highlighter-rouge">8283</code>,服务注册端口<strong>依旧</strong>为<code class="highlighter-rouge">1238</code></p>
+
+<p>Gateway类型为websocket:</p>
+
+<p><code class="highlighter-rouge">$gateway = new Gateway("websocket://0.0.0.0:8283");</code></p>
+
+<h4 id="数据共享">数据共享</h4>
+<p>我们建立了两个服务器，一个Tcp，一个WebSocket。那么如果实现通信呢？</p>
+
+<p>解决方案就是<strong>在WebSocket服务器内创建一个tcp 客户端</strong>即可，代码如下：</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+</pre></td><td class="rouge-code"><pre><span class="c1">// 文件路径 /WSServer/Events.php</span>
+<span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">onMessage</span><span class="p">(</span><span class="nv">$client_id</span><span class="p">,</span> <span class="nv">$message</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$message</span><span class="p">);</span>
+    <span class="c1">// 向所有人发送</span>
+    <span class="nv">$host</span> <span class="o">=</span> <span class="s2">"127.0.0.1"</span><span class="p">;</span>
+    <span class="nv">$port</span> <span class="o">=</span> <span class="mi">8282</span><span class="p">;</span>
+    <span class="k">global</span> <span class="nv">$socket</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$socket</span><span class="p">))</span> <span class="p">{</span>
+        <span class="nv">$socket</span> <span class="o">=</span> <span class="nx">TcpClient</span><span class="o">::</span><span class="na">getInstace</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="nv">$host</span><span class="p">,</span> <span class="nv">$port</span><span class="p">);</span>
+    <span class="nx">Gateway</span><span class="o">::</span><span class="na">sendToClient</span><span class="p">(</span><span class="nv">$client_id</span><span class="p">,</span> <span class="s2">"</span><span class="nv">$client_id</span><span class="s2"> welcome</span><span class="se">\n\r</span><span class="s2">"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h5 id="注意webserver服务器在次处只是充当一个中转站其他不起任何作用包括onmessage方法都是使用的tcpserver的eventsphp">注意：WebServer服务器在次处只是充当一个中转站，其他不起任何作用。包括<code class="highlighter-rouge">onMessage</code>方法都是使用的<code class="highlighter-rouge">TcpServer</code>的Events.php</h5>
+
+<h5 id="测试">测试</h5>
+<ol>
+  <li>
+    <p>启动 <code class="highlighter-rouge">telnet 127.0.0.1 8282</code>,<code class="highlighter-rouge">telnet 127.0.0.1 8283</code></p>
+  </li>
+  <li>
+    <p>打开浏览器，F12，console处输入下方代码</p>
+    <pre><code class="language-javascirpt">ws = new WebSocket("ws://127.0.0.1:8283");
+ws.onopen = function() {
+    alert("连接成功");
+    ws.send('tom');
+    alert("给服务端发送一个字符串：tom");
+};
+ws.onmessage = function(e) {
+    alert("收到服务端的消息：" + e.data);
+};
+ƒ (e) {
+    alert("收到服务端的消息：" + e.data);
+}
+</code></pre>
+    <p>此时，Tcp服务器接收到数据 tom：
+<img src="https://i.loli.net/2019/07/22/5d35a6c83e8cf10757.png" alt="" />
+在Tcp发送数据 1，浏览器显示：
+<img src="https://i.loli.net/2019/07/22/5d35a6f7ee51014238.png" alt="" /></p>
+  </li>
+</ol>
+
+<hr />
+
+<p>至此，服务器和硬件的双向通行已完成。至于后续的微信小程序控制硬件，则就是微信小程序直接调用WebSocket即可。</p>
+
+<p>参考文章：<a href="https://blog.csdn.net/kangle0228/article/details/83109820">基于Web实现远程与硬件交互</a></p>
+:ET

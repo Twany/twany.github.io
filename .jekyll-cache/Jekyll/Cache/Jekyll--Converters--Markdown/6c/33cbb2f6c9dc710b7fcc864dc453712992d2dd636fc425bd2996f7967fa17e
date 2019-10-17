@@ -1,0 +1,175 @@
+I"�<p>耗费两天时间，各种百度谷歌，终于把phpexcel这块攻克下来！！！</p>
+<h2 id="1phpexcel的下载与安装">1.phpexcel的下载与安装</h2>
+<p>其实一开始我是被这里绊住了，不知道为什么composer一直下载不下来。翻墙也没有用。
+其实我手头是有phpexcel类库的，但是引入不到tp51.框架内：</p>
+
+<p><strong>tp5.1废弃了import和vendor！！！</strong></p>
+
+<p>于是只剩下最后一种办法：</p>
+
+<p><strong>PHP的引入基础：require_once</strong>
+通过这个方法引入类库：
+<img src="https://img-blog.csdnimg.cn/20190112204032477.png" alt="在这里插入图片描述" />
+路径如下：
+<img src="https://img-blog.csdnimg.cn/20190112204115289.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MzIwMjM2NA==,size_16,color_FFFFFF,t_70" alt="在这里插入图片描述" /></p>
+
+<p>最重要的一步完成了，接下来便是如何引用了。</p>
+
+<h2 id="1phpexcel的使用">1.phpexcel的使用</h2>
+<p>我们首先来讨论：<strong>前端上传Excel文件，控制器读取并输入</strong></p>
+
+<p>首先给出tp51文档：
+https://www.kancloud.cn/manual/thinkphp5_1/354121</p>
+
+<p>最中重要的是后端file文件的接受：<code class="highlighter-rouge">requert()-&gt;file()</code></p>
+
+<p>然后使用phpexcel加载上传的Excel</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+</pre></td><td class="rouge-code"><pre>$phpExcelObj = \PHPExcel_IOFactory::load($fileName); 注意此处的filename为文件路径，`$fileName = '/public/upload/excel/'.$info-&gt;getSaveName();`
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>我的文件路径：
+<img src="https://img-blog.csdnimg.cn/20190112204809710.png" alt="在这里插入图片描述" /></p>
+
+<p>上完整代码</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+</pre></td><td class="rouge-code"><pre>	public function doUpload()
+	{
+		
+		$data = input();
+		$file = request()-&gt;file('excel');
+		//dump($data);
+		
+		//考试批次
+		$batch = $data['batch'];
+		
+		//班级
+		$class = $data['class'];
+		
+		//科目
+		$subject = $data['subject'];
+		
+		$info =  $file-&gt;validate(['size'=&gt;1048576,'ext'=&gt;'xlsx,xls'])-&gt;move('/public/upload/excel');
+		if($info){
+			//再batch表创建对应批次
+			$db = Db::table('batch')-&gt;insert(['batch'=&gt;$batch]);
+			
+			//加载指定文件
+			$fileName = '/public/upload/excel/'.$info-&gt;getSaveName();
+
+			$phpExcelObj = \PHPExcel_IOFactory::load($fileName);
+			$sheet = array();
+			$sheet[] = $phpExcelObj-&gt;getSheet(0)-&gt;toArray();
+			
+			$name = '';
+			//dump($sheet[0]);
+			//把表格数据遍历为数组
+			foreach($sheet[0] as $key=&gt;$value){
+				
+				if($key!=0){
+					foreach($value as $k=&gt;$val){
+						if($k == 0){
+							$name = $val;
+						}
+						if($k == 1){
+							$score = $val;
+						}
+						
+					}
+					
+					GradeModel::create(['name'=&gt;$name,'score'=&gt;$score,'batch'=&gt;$batch,'class'=&gt;$class,'subject'=&gt;$subject]);
+					//echo $name.$score.$batch.$class.'&lt;br&gt;';
+				}
+				
+			}
+			$this-&gt;view-&gt;assign('class',$class);
+			$this-&gt;view-&gt;assign('batch',$batch);
+			$this-&gt;view-&gt;assign('subject',$subject);
+			return $this-&gt;view-&gt;fetch();
+
+		}else{
+			// 上传失败获取错误信息
+			//echo $file-&gt;getError();
+			return ['status'=&gt;0,'msg'=&gt;'上传失败'];
+		}	
+	}
+
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p>OK，phpexcel到此为止！</p>
+
+<h2 id="总结">总结：</h2>
+
+<ul>
+  <li>不要拘泥于既定，勇于尝试新思路新方法</li>
+  <li>注重php基础，此处用到便是require_once。要记住，任何框架都是基础基础之上！</li>
+  <li>多与他人交流</li>
+</ul>
+
+<p>这里感谢 <a href="https://www.1949la.com/post/55.html#cmt123">小小博客</a> 的指点迷津！</p>
+
+<p>教程：<a href="http://edu.51cto.com/center/course/lesson/index?id=259283">http://edu.51cto.com/center/course/lesson/index?id=259283</a></p>
+
+<p>2019.1.12</p>
+:ET

@@ -1,0 +1,130 @@
+I"�<h2 id="vim文本编辑器">Vim文本编辑器</h2>
+<blockquote>
+  <p>Vim的重要性不再赘述</p>
+</blockquote>
+
+<p>Vim有三种模式：<strong>命令模式</strong>、<strong>输入模式</strong>、<strong>冒号模式</strong></p>
+
+<p>关系如下图：
+<img src="https://i.loli.net/2019/07/14/5d2b020307bbb36462.png" alt="" /></p>
+
+<p>切记：<strong>输入模式和冒号模式不能相互转换</strong></p>
+
+<p>命令模式下命令：
+<img src="https://i.loli.net/2019/07/14/5d2b024abaf2110651.png" alt="" /></p>
+
+<p>冒号模式下：
+<img src="https://i.loli.net/2019/07/14/5d2b02720be7758535.png" alt="" /></p>
+
+<hr />
+
+<h2 id="编写shell脚本">编写Shell脚本</h2>
+<h4 id="基本概念">基本概念</h4>
+<ul>
+  <li><strong>脚本要以<code class="highlighter-rouge"><span class="c">#!/bin/bash</span></code>开头</strong></li>
+  <li><code class="highlighter-rouge">#</code> 为注释</li>
+</ul>
+
+<h4 id="参数接受">参数接受</h4>
+<ul>
+  <li><code class="highlighter-rouge">$0</code> 当前脚本名称</li>
+  <li><code class="highlighter-rouge">$#</code> 接受参数个数</li>
+  <li><code class="highlighter-rouge">$*</code> 所有参数</li>
+  <li><code class="highlighter-rouge">$?</code> 上次命令的执行返回值</li>
+  <li><code class="highlighter-rouge">$1,$2,...</code> 第N个参数值</li>
+</ul>
+
+<h4 id="参数判断">参数判断</h4>
+<p>格式：<strong>[ 条件表达式 ]</strong>,必须<strong>加空格</strong>
+<img src="https://i.loli.net/2019/07/14/5d2b03edeb25820668.png" alt="文件测试所用的参数" />
+<img src="https://i.loli.net/2019/07/14/5d2b03fb9aa5e17921.png" alt="可用的整数比较运算符" /></p>
+
+<h4 id="流程控制语句">流程控制语句</h4>
+<p><strong>if语句</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+</pre></td><td class="rouge-code"><pre>if [ ... ]
+then
+    ...
+
+elif
+then
+    ...
+
+else
+    ...
+fi
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><img src="https://i.loli.net/2019/07/14/5d2b0594cf88d62537.png" alt="" /></p>
+
+<p><strong>for循环</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>for 变量名 in 取值列表
+do
+    命令序列
+done
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><strong>while循环</strong></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>while [ ... ]
+do
+    ...
+done
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p><img src="https://i.loli.net/2019/07/14/5d2b0629cd81852872.png" alt="" /></p>
+
+<p><strong>cookie</strong></p>
+<ul>
+  <li>切记定义常量时，不能加空格： <code class="highlighter-rouge">PRICE=${expr $RANDOM % 10}</code></li>
+  <li>如上所示，<code class="highlighter-rouge">expe</code> 的作用</li>
+  <li><code class="highlighter-rouge">echo $?</code> 0为true，1位false</li>
+  <li>常量定义是不用加<code class="highlighter-rouge">$</code>, 但使用时必须要加</li>
+</ul>
+
+<h2 id="计划任务服务程序">计划任务服务程序</h2>
+<h4 id="一次性计划任务">一次性计划任务</h4>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+</pre></td><td class="rouge-code"><pre>&gt; at 23.30
+&gt; reboot
+# 按Ctrl + D 结束编写
+</pre></td></tr></tbody></table></code></pre></div></div>
+<p>以上命令作用是，在23.30重启（一次性）</p>
+<h4 id="长期命令">长期命令</h4>
+<ul>
+  <li><code class="highlighter-rouge">crontab -e</code>  创建计划</li>
+  <li><code class="highlighter-rouge">crontab -l</code>  查看当前计划</li>
+  <li><code class="highlighter-rouge">crontab -r</code>  删除计划</li>
+</ul>
+
+<p><strong>时间周期</strong>
+<img src="https://i.loli.net/2019/07/14/5d2b07cedb23b80839.png" alt="" /></p>
+
+<p>注意：<strong>分 字段必须有数值</strong></p>
+
+<hr />
+
+<h2 id="图片笔记">图片笔记</h2>
+<p><img src="https://i.loli.net/2019/07/14/5d2b08798a25a35585.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/14/5d2b087aa76d546331.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/14/5d2b087b5b40988527.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/14/5d2b087c068d079946.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/14/5d2b087c9bb7369079.jpg" alt="" /></p>
+:ET

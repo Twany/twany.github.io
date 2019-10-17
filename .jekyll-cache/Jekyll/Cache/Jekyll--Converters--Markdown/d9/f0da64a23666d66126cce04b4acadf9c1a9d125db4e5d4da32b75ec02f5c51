@@ -1,0 +1,100 @@
+I"�<h2 id="元素去重">元素去重</h2>
+<p>题目要求：</p>
+
+<p>输入：1,1,2,3,3,5,7,7,8,12,12,13 <br />
+输出：1,2,3,5,7,8,12,13</p>
+
+<h4 id="方法一-直观查找">方法一 直观查找</h4>
+<p>即放入数组，逐个对比</p>
+
+<h4 id="方法二-抽象数据类型查找">方法二 抽象数据类型查找</h4>
+<p><strong>set红黑树</strong></p>
+
+<p><strong>散列表（暂未接触）</strong></p>
+
+<h4 id="方法三-lr双边界">方法三 L、R双边界</h4>
+<p><img src="https://i.loli.net/2019/07/07/5d2162856354a17342.png" alt="" /></p>
+
+<p>由上图可见，我们设置两个“哨兵点”，即<code class="highlighter-rouge">arr[left]</code>,<code class="highlighter-rouge">arr[right]</code>，只存储两个元素</p>
+
+<p>每当<code class="highlighter-rouge">arr[left]！=arr[right]</code>时，使<code class="highlighter-rouge">left = right</code>，之后再进行比较。</p>
+
+<p>代码如下：</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+</pre></td><td class="rouge-code"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Main</span>
+<span class="o">{</span>
+    <span class="c1">//元素去重，以1,1,2,3,3,5,7,7,8,12,12,13为例</span>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="nc">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span>
+    <span class="o">{</span>
+        <span class="kt">int</span><span class="o">[]</span> <span class="n">arr</span> <span class="o">=</span> <span class="o">{</span><span class="mi">1</span><span class="o">,</span><span class="mi">1</span><span class="o">,</span><span class="mi">2</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">3</span><span class="o">,</span><span class="mi">5</span><span class="o">,</span><span class="mi">7</span><span class="o">,</span><span class="mi">7</span><span class="o">,</span><span class="mi">8</span><span class="o">,</span><span class="mi">12</span><span class="o">,</span><span class="mi">12</span><span class="o">,</span><span class="mi">13</span><span class="o">};</span>
+        <span class="kt">int</span> <span class="n">left</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+        <span class="kt">int</span> <span class="n">right</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
+
+        <span class="k">while</span><span class="o">(</span><span class="n">right</span> <span class="o">&lt;</span> <span class="n">arr</span><span class="o">.</span><span class="na">length</span><span class="o">){</span>
+            <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">right</span><span class="o">]</span> <span class="o">!=</span> <span class="n">arr</span><span class="o">[</span><span class="n">left</span><span class="o">]){</span>
+                <span class="c1">//这样不能输出最后一个元素</span>
+                <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">left</span><span class="o">]);</span>
+
+                <span class="c1">//这样则不能输出第一个元素</span>
+                <span class="c1">//System.out.println(arr[left]);</span>
+                <span class="n">left</span> <span class="o">=</span> <span class="n">right</span><span class="o">;</span>
+            <span class="o">}</span>
+            <span class="n">right</span><span class="o">++;</span>
+        <span class="o">}</span>
+
+        <span class="c1">//输出最后一个元素</span>
+        <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">){</span>
+            <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">right</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span>
+        <span class="o">}</span>
+
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<p><strong>此处有一个需要注意的地方：</strong></p>
+<ul>
+  <li>
+    <p>是输出arr[left]还是arr[right]呢？
+看代码我们可以知道，<code class="highlighter-rouge">right++</code>在<code class="highlighter-rouge">System.out.println(arr[left]);left = right;</code>之后。</p>
+
+    <p>所以，当右哨兵到达最后一位时，arr[right]不会输出，所以我们在最后：</p>
+    <div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre>  <span class="c1">//输出最后一个元素</span>
+  <span class="k">if</span><span class="o">(</span><span class="n">arr</span><span class="o">.</span><span class="na">length</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">){</span>
+      <span class="nc">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">arr</span><span class="o">[</span><span class="n">right</span><span class="o">-</span><span class="mi">1</span><span class="o">]);</span>
+  <span class="o">}</span>
+</pre></td></tr></tbody></table></code></pre></div>    </div>
+  </li>
+</ul>
+:ET

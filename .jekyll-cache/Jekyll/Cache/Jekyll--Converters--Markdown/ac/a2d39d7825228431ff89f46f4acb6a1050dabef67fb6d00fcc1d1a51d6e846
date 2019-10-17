@@ -1,0 +1,113 @@
+I"_<h2 id="一切从开始">一切从“/”开始</h2>
+<p>Linux系统的文件存储系统极具特色，采用<strong>文件系统层次化标准（FHS）</strong>，如下图：
+<img src="https://i.loli.net/2019/07/20/5d332eae295ba81301.png" alt="" /></p>
+
+<p>其中，各目录标准存放文件类型如下：
+<img src="https://i.loli.net/2019/07/20/5d332ee12428e56424.png" alt="" /></p>
+
+<h2 id="物理设备的命名规则">物理设备的命名规则</h2>
+<p>分区关系如图：
+<img src="https://i.loli.net/2019/07/20/5d332f6626c0d20618.png" alt="" />
+<img src="https://i.loli.net/2019/07/20/5d332f7aa135e17710.png" alt="" /></p>
+
+<h2 id="文件系统与数据资料">文件系统与数据资料</h2>
+<p>RHEL 7 默认的文件系统为XFS，作用是发生宕机后快速恢复可能被破坏的文件，存储容量大，是一种高性能的日志文件系统。</p>
+
+<h2 id="挂载硬件设备">挂载硬件设备</h2>
+<h5 id="挂载意为将设备和已存在的目录文件进行关联这个动作即为挂载">挂载意为将设备和已存在的目录文件进行关联，这个动作即为挂载</h5>
+<ul>
+  <li><code class="highlighter-rouge">mount 文件 目录</code> 挂载文件系统
+    <ul>
+      <li>上述操作重启失效，将挂载信息存储在<code class="highlighter-rouge">/etc/fstab</code>中则永久有效</li>
+      <li>格式：<code class="highlighter-rouge">设备文件 挂载目录 格式类型 权限选项 是否备份 是否自检</code>
+        <ul>
+          <li>例：<code class="highlighter-rouge">/dev/sdb2 /backup ext4 defaults 0 0</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><code class="highlighter-rouge">umount [挂载点/设备文件]</code> 撤销挂载</li>
+</ul>
+
+<h2 id="添加硬盘设备">添加硬盘设备</h2>
+<p>详细可知👉 <a href="https://www.linuxprobe.com/chapter-06.html">存储结构与磁盘划分</a></p>
+
+<h2 id="添加交换分区">添加交换分区</h2>
+<p><strong>SWAP分区</strong>是一种通过在硬盘中预先划分出一定空间，然后把内存中暂时不用的数据临时存储在硬盘中。</p>
+
+<p>交换分区创建过程与前面的挂载过程类似，不同之处如下：</p>
+<ul>
+  <li>专用格式化命令<code class="highlighter-rouge">mkswap</code></li>
+</ul>
+
+<h2 id="磁盘容量配额">磁盘容量配额</h2>
+<blockquote>
+  <p>引子：为了防止Linux系统中某个用户大量占用空间，可对磁盘容量进行<strong>配额管理</strong></p>
+</blockquote>
+
+<p>**RHEL 7 已经安装quote磁盘容量配额服务程序包，但默认不开启，可在配置文件中修改：</p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+</pre></td><td class="rouge-code"><pre><span class="o">[</span>root@linuxprobe ~]# vim /etc/fstab //修改配置文件
+<span class="c">#</span>
+<span class="c"># /etc/fstab</span>
+<span class="c"># Created by anaconda on Wed May 4 19:26:23 2017</span>
+<span class="c">#</span>
+<span class="c"># Accessible filesystems, by reference, are maintained under '/dev/disk'</span>
+<span class="c"># See man pages fstab(5), findfs(8), mount(8) and/or blkid(8) for more info</span>
+<span class="c">#</span>
+/dev/mapper/rhel-root / xfs defaults 1 1
+<span class="nv">UUID</span><span class="o">=</span>812b1f7c-8b5b-43da-8c06-b9999e0fe48b /boot xfs defaults,<span class="k">**</span>uquota<span class="k">**</span> 1 2
+/dev/mapper/rhel-swap swap swap defaults 0 0
+/dev/cdrom /media/cdrom iso9660 defaults 0 0 
+/dev/sdb1 /newFS xfs defaults 0 0 
+/dev/sdb2 swap swap defaults 0 0 
+<span class="o">[</span>root@linuxprobe ~]# reboot //重启查看
+<span class="o">[</span>root@linuxprobe ~]# mount | <span class="nb">grep </span>boot
+/dev/sda1 on /boot <span class="nb">type </span>xfs <span class="o">(</span>rw,relatime,seclabel,attr2,inode64,usrquota<span class="o">)</span>
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h4 id="xfs_quote命令">xfs_quote命令</h4>
+<p><strong>对用户进行配额管理</strong>
+<img src="http://ww1.sinaimg.cn/large/006Sc6e5ly1g57x1sqvm1j30eu03qmx5.jpg" alt="" /></p>
+
+<h4 id="edquota">edquota</h4>
+<p><strong>编辑用户的quote配置</strong></p>
+<div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><table class="rouge-table"><tbody><tr><td class="rouge-gutter gl"><pre class="lineno">1
+2
+3
+4
+</pre></td><td class="rouge-code"><pre><span class="o">[</span>root@linuxprobe ~]# edquota <span class="nt">-u</span> tom  //编辑tom，默认vim
+Disk quotas <span class="k">for </span>user tom <span class="o">(</span>uid 1001<span class="o">)</span>:
+ Filesystem blocks soft hard inodes soft hard
+ /dev/sda1 6144 3072 8192 1 3 6
+</pre></td></tr></tbody></table></code></pre></div></div>
+
+<h2 id="软硬方式链接">软硬方式链接</h2>
+<p>链接类似于Windows的“快捷方式”，在Linux分为“软链接”和“硬链接”，硬链接其实是<strong>copy一个原文件</strong>，软链接才是真正的<strong>“快捷方式”</strong></p>
+
+<h4 id="ln命令">ln命令</h4>
+<p><code class="highlighter-rouge">ln [选项] 目标</code>  不加<code class="highlighter-rouge">-s</code>默认硬链接，加了为软链接</p>
+<hr />
+
+<h2 id="笔记照片">笔记照片</h2>
+<p><img src="https://i.loli.net/2019/07/20/5d33324498db776360.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/20/5d3332455ad5980089.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/20/5d3332461a62d59148.jpg" alt="" />
+<img src="https://i.loli.net/2019/07/20/5d333246d12c346683.jpg" alt="" /></p>
+:ET
