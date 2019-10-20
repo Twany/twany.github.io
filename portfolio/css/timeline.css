@@ -49,13 +49,12 @@ body, html {
 
 .cbp_tmtimeline > li {
 	/* position: relative; */
-	float: left;/*li标签按顺序向ul父元素左方浮动*/
+
 	box-sizing: border-box;
 	/* display: inline-block; */
 	/* vertical-align: top;  */
 	max-width: 30%;
-	margin: 25px;
-	height: 500px;
+
 	margin-bottom: 150px;
 	/* width: 100%; */
 }

@@ -1,121 +1,105 @@
 ---
 title: Portfolio
-layout: default
+layout: protfolio
 ---
 
 <!DOCTYPE html>
-<html class="no-js">
+<html lang="zh-CN" class="no-js">
 
 <head>
-	<meta charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Twany - 作品集</title>
-	<link rel="stylesheet" type="text/css" href="css/timeline.css" />
-	<script src="js/modernizr.custom.js"></script>
+<meta charset="utf-8">
+<title>响应式博客幻灯片演示_dowebok</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<link rel="stylesheet" href="css/normalize.min.css">
+<link rel="stylesheet" href="css/swiper.min.css">
+<link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
-	<div class="container" style="margin:0;padding:0;width:100%;">
 		<header>
-			<img width="175" height="175" style="border-radius:50%;" src="/img/avatar-yyk.jpg">
-			<h1>作品集</h1>
+				<img width="175" height="175" style="border-radius:50%;" src="/img/avatar-yyk.jpg">
+				<h1>作品集</h1>
 		</header>
-		<div class="main">
-			<ul class="cbp_tmtimeline">
-				<!-- 记忆相册 -->
-				<li>
-					<div class="cbp_tmlabel">
-						<h2 id="boxoffice"> 记忆相册</h2>
-						<time>2019.10.14</time>
-						<img src="images/memoryAlbum.png" height="400px">
-						<ul>
-							<li>
-								基于 Vue 使用 `uniapp` 开发，多端使用（手机APP，H5端，微信小程序等）。
-								具备多人共享，人脸识别，图片归类等功能
-							</li>
-							<li class="skill">
-								<span style="margin-left: 10px"><b>UniApp</b></span>
-								<span class="link"><a target="_blank"
-										href="https://v.youku.com/v_show/id_XNDM5NDM5NDgzNg==.html?spm=a2h3j.8428770.3416059.1">优酷观看</a></span>
-							</li>
-						</ul>
-					</div>
-				</li>
 
+<div class="blog-slider" style="margin-top:400px">
+	
+    <div class="blog-slider__wrp swiper-wrapper">
+        <div class="blog-slider__item swiper-slide">
+            <div class="blog-slider__img">
+                <img src="images/memoryAlbum.png" alt="记忆相册">
+            </div>
+            <div class="blog-slider__content">
+                <span class="blog-slider__code">2019.10.14</span>
+                <div class="blog-slider__title">记忆相册</div>
+                <div class="blog-slider__text">基于 Vue 使用 `uniapp` 开发，多端使用（手机APP，H5端，微信小程序等）。
+						具备多人共享，人脸识别，图片归类等功能</div>
+                <a href="https://v.youku.com/v_show/id_XNDM5NDM5NDgzNg==.html?spm=a2h3j.8428770.3416059.1" class="blog-slider__button">优酷观看</a>
+            </div>
+        </div>
 
-				<!-- 乐优商城 -->
-				<li>
-					<div class="cbp_tmlabel">
-						<h2 id="boxoffice"> 乐优商城</h2>
-						<time>2019.8.20</time>
-						<img src="images/leyou.png" height="400px">
-						<ul>
-							<li>
-								学习 SpringBoot 时做的项目，整个乐优商城可以分为两部分：后台管理系统，前台门户系统。
-								技术栈包括：SpringBoot、SpringCloud、Vue等
-							</li>
-							<li class="skill">
-								<span style="margin-left: 10px"><b>Java</b></span>
-								<span class="link"><a target="_blank"
-										href="https://github.com/lyj8330328/leyou">GitHub</a></span>
-							</li>
-						</ul>
-					</div>
-				</li>
+        <div class="blog-slider__item swiper-slide">
+            <div class="blog-slider__img">
+                <img src="images/leyou.png" alt="images/leyou.png">
+            </div>
+            <div class="blog-slider__content">
+                <span class="blog-slider__code">2019.8.20</span>
+                <div class="blog-slider__title">乐优商城</div>
+                <div class="blog-slider__text">学习 SpringBoot 时做的项目，整个乐优商城可以分为两部分：后台管理系统，前台门户系统。
+						技术栈包括：SpringBoot、SpringCloud、Vue等</div>
+                <a href="https://github.com/lyj8330328/leyou" class="blog-slider__button">GitHub</a>
+            </div>
+        </div>
 
-
-
-				<!-- 鲸风检测系统 -->
-				<li style="float: left;">
-					<div class="cbp_tmlabel">
-						<h2 id="boxoffice"> 鲸风检测系统</h2>
-						<time>2019.9.10</time>
-						<img src="images/jingfeng.png" height="400px">
-						<ul>
-							<li>
-								河北省天气质量指数可视化，使用了 ECharts 和 mapbox 技术栈。
-								这是一个物联网系统，搭配硬件进行数据获取，实时展示在检测平台
-							</li>
-							<li class="skill">
-								<span style="margin-left: 10px"><b>ECharts</b></span>
-								<span class="link"><a target="_blank" aria-disabled="true"
-										href="https://v.youku.com/v_show/id_XNDM5NDM5NDgzNg==.html?spm=a2h3j.8428770.3416059.1">GitHub</a></span>
-							</li>
-						</ul>
-					</div>
-				</li>
-
-
-				<!-- php开发的博客 -->
-				<li>
-					<div class="cbp_tmlabel">
-						<h2 id="boxoffice">博客</h2>
-						<time>2018.10.24</time>
-						<img src="images/work-blog.jpg" height="400px">
-						<ul>
-							<li>
-								此项目是参加php中文网第三期培训的结课作业.
-								功能:用户登录,用户注销,发表博文,编辑博文,标签,评论,完整的后台管理系统.
-								技术栈:html,Css,js,php,Mysql,jQuery,Bootstrap.
-								后台模板:X-admin
-							</li>
-							<li class="skill">
-								<span style="margin-left: 10px"><b>PHP</b></span>
-								<span class="link"><a target="_blank"
-										href="https://github.com/Twany/blog">Github</a></span>
-							</li>
-						</ul>
-					</div>
-				</li>
-
-
-
-
-			</ul>
-
+        <div class="blog-slider__item swiper-slide">
+            <div class="blog-slider__img">
+                <img src="images/jingfeng.png" alt="鲸风检测系统">
+            </div>
+            <div class="blog-slider__content">
+                <span class="blog-slider__code">2019.9.10</span>
+                <div class="blog-slider__title">鲸风检测系统</div>
+                <div class="blog-slider__text">河北省天气质量指数可视化，使用了 ECharts 和 mapbox 技术栈。
+						这是一个物联网系统，搭配硬件进行数据获取，实时展示在检测平台。</div>
+                <a href="" class="blog-slider__button">GitHub</a>
+            </div>
 		</div>
-	</div>
+		
+		<div class="blog-slider__item swiper-slide">
+				<div class="blog-slider__img">
+					<img src="images/work-blog.jpg" alt="博客">
+				</div>
+				<div class="blog-slider__content">
+					<span class="blog-slider__code">2019.8.20</span>
+					<div class="blog-slider__title">博客</div>
+					<div class="blog-slider__text">此项目是参加php中文网第三期培训的结课作业.
+							功能:用户登录,用户注销,发表博文,编辑博文,标签,评论,完整的后台管理系统.
+							技术栈:html,Css,js,php,Mysql,jQuery,Bootstrap.
+							后台模板:X-admin</div>
+					<a href="https://github.com/Twany/blog" class="blog-slider__button">GitHub</a>
+				</div>
+		</div>
+
+		<div class="blog-slider__item swiper-slide">
+				<div class="blog-slider__img">
+					<img src="images/more.png" alt="更多">
+				</div>
+				<div class="blog-slider__content">
+					<span class="blog-slider__code">2048.10.24</span>
+					<div class="blog-slider__title">more</div>
+					<div class="blog-slider__text">
+						更多小作品，不再演示...
+					</div>
+					<a _href="" class="blog-slider__button">GitHub</a>
+				</div>
+		</div>
+
+    </div>
+    <div class="blog-slider__pagination"></div>
+</div>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/swiper.min.js"></script>
+<script src="js/index.js"></script>
+
 </body>
 
 </html>
