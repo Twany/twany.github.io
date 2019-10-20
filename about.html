@@ -1,5 +1,5 @@
 ---
-layout: page
+layout: post
 title: "About"
 description: "你是我的梦想"
 header-img: "img/bg-art/about-bg.jpg"
@@ -7,7 +7,7 @@ multilingual: true
 ---
 
 <!-- Language Selector -->
-<select class="sel-lang" onchange= "onLanChange(this.options[this.options.selectedIndex].value)">
+<select class="sel-lang" onchange="onLanChange(this.options[this.options.selectedIndex].value)">
     <option value="0" selected> 中文 Chinese </option>
     <option value="1"> 英文 English </option>
 </select>
@@ -34,6 +34,60 @@ multilingual: true
 </div>
 <!-- disqus 评论框 end -->
 
+<!-- 时间轴 -->
+<h1>时间轴</h1>
+<link rel="stylesheet" href="../css/timeline.css">
+<div>
+    <div class="main">
+        <ul class="timeline">
+            <li>
+                <!-- <time class="time" datatime="2014-11-08 8:41">
+                                <span>14/11/08</span><span>8:41</span>
+                            </time> -->
+                <div class="timeicon timeiconPhone"></div>
+                <div class="lable">
+                    <div>
+                        <p class="title">初习编程</p>
+                        <p class="time">2018.07</p>
+                    </div>
+            
+                    <hr>
+                    <p>
+                        参加了PHP中文网的第三期培训。
+                        
+                    </p>
+                </div>
+            </li>
+
+            <li>
+                    <!-- <time class="time" datatime="2014-11-08 8:41">
+                                    <span>14/11/08</span><span>8:41</span>
+                                </time> -->
+                    <div class="timeicon timeiconPhone"></div>
+                    <div class="lable">
+                        <div>
+                            <p class="title">初习编程</p>
+                            <p class="time">2019.08.16</p>
+                        </div>
+    
+                        <hr>
+                        <p>
+                            Winter purslane courgette pumpkin quandong komatsuna fennel green bean cucumber
+                            watercress. Pea sprouts wattle seed rutabaga okra yarrow cress avocado grape radish
+                            bush tomato ricebean black-eyed pea maize eggplant. Cabbage lentil cucumber chickpea
+                            sorrel gram garbanzo plantain lotus root bok choy squash cress potato summer purslane
+                            salsify fennel horseradish dulse. Winter purslane garbanzo artichoke broccoli lentil
+                            corn okra silver beet celery quandong. Plantain salad beetroot bunya nuts black-eyed
+                            pea collard greens radish water spinach gourd chicory prairie turnip avocado sierra
+                            leone bologi.
+                        </p>
+                    </div>
+                </li>
+        </ul>
+    </div>
+</div>
+
+
 <!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
@@ -41,8 +95,10 @@ multilingual: true
     var disqus_identifier = "{{site.disqus_username}}/{{page.url}}";
     var disqus_url = "{{site.url}}{{page.url}}";
 
-    (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    (function () {
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
         dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
         (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
     })();
