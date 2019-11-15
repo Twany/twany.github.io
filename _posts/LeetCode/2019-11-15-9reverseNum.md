@@ -94,7 +94,7 @@ return false;
 
 ## 测试 Submit
 
-![1573816874732](C:\Users\Mr.Y\AppData\Roaming\Typora\typora-user-images\1573816874732.png)
+![](https://i.loli.net/2019/11/15/7GpOsVQzZSBelIP.png)
 
 ## 分析
 
@@ -140,7 +140,7 @@ return (num == x) || (num / 10 == x);
 
 ## 改进Submit
 
-![1573816766481](C:\Users\Mr.Y\AppData\Roaming\Typora\typora-user-images\1573816766481.png)
+![](https://i.loli.net/2019/11/15/KtmQJGxpWrlB3YV.png)
 
 ## 收获总结
 
